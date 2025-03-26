@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recommended Places</title>
+    <link rel="stylesheet" href="../static/Menu/menu_style.css">
+    <script src="../static/Menu/menu_script.js" defer></script>
+    <link rel="stylesheet" href="../static/Recommend/recommend_style.css">
+    <script src="../static/Recommend/recommend_script.js" defer></script>
+</head>
+<body>
+    <div class="header">
+        <div class="hamburger-menu" id="hamburger-menu">&#9776;</div>
+        <div class="logo_container">
+            <img src="/picture/logo/logo.png" alt="logo" class="logo" />
+        </div>
+        <nav class="sidebar" id="sidebar">
+            <ul class="sidebar-nav">
+                <li class="nav-item"><a href="../" class="nav-link">홈</a></li>
+                <li class="nav-item"><a href="#" class="nav-link">설정</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <div class="container">
+
+        <!-- 추천 장소 목록 -->
+        {% for place in recommended_places %}
+        {% set place_id = place['Name'] | replace(' ', '_') %}
+        <div class="card" onclick="toggleSelection('{{ place_id }}')" id="place-{{ place_id }}">
+            <img src="{{ place['Img'] }}" alt="Place Image">
+            <div class="card-content">
+                <h3 class="card-title">{{ place['Name'] }}</h3>
+                <p class="card-address">{{ place['Address'] }}</p>
+            </div>
+        </div>
+        {% endfor %}
+        <button onclick="submitSelection()" class="next-button">다음</button>
+    </div>
+    
+</body>
+</html>

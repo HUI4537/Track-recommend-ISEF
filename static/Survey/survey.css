@@ -1,0 +1,218 @@
+@font-face {
+    font-family: 'HancomMalangMalang-Regular';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2406-1@1.0/HancomMalangMalang-Regular.woff2') format('woff2');
+}
+
+body {
+    font-family: 'HancomMalangMalang-Regular', sans-serif;
+    margin: 0;
+    overflow-x: hidden;
+    overflow: hidden; /* 초기 상태에서는 스크롤을 비활성화 */
+}
+
+h1 {
+    color: #FFA500;
+}
+
+h2 {
+    font-size: 42px;
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+.question-box, .start_box {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.5s ease;
+}
+
+.option-group {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+    margin-top: 60px;
+}
+
+.option {
+    background-color: #ffffff;
+    color: #333;
+    font-weight: bold;
+    border-radius: 20px;
+    padding: 30px;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.option.selected {
+    background-color: #FFA500;
+    color: #333;
+}
+
+.next-button {
+    width: 100%;
+    padding: 15px;
+    background-color: #FFA500;
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.next-button:hover {
+    background-color: #FF8C00;
+    overflow: hidden;
+}
+
+.logoimg {
+    width: 50%;
+    object-fit: cover;
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+
+#start_button {
+    border: solid #333 1px;
+    border-radius: 10px;
+    background-color: #333;
+    padding: 5%;
+    color: #ffffff;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+p {
+    font-size: 32px;
+}
+
+.typing {
+    height: 5%;
+    margin: 5%;
+    width: 90%;
+    border: 0;
+    outline: none;
+    border-radius: 15px;
+    background-color: rgb(175, 175, 175);
+}
+
+.page-layout {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.container {
+    max-width: 700px;
+    width: 90%;
+    margin: 0 auto;
+    padding: 120px 20px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    background-color: #ebebeb;
+}
+/* 잠금 상태를 위한 클래스 */
+/* 스크롤 고정 상태 클래스 */
+.scroll-lock {
+    overflow: hidden;
+    height: 100vh;
+}
+html.scroll-lock, body.scroll-lock {
+    overflow: hidden;
+}
+
+.calendar-container {
+    background: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.calendar {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+    padding: 10px;
+}
+
+.calendar-header {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.calendar-day {
+    padding: 10px;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.calendar-day:not(.empty):not(.header):hover {
+    background-color: #f0f0f0;
+}
+
+.calendar-day.selected {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.calendar-day.start-date {
+    background-color: #2196F3;
+    color: white;
+}
+
+.calendar-day.end-date {
+    background-color: #2196F3;
+    color: white;
+}
+
+.calendar-day.header {
+    font-weight: bold;
+    background-color: #f8f9fa;
+    cursor: default;
+}
+
+.calendar-day.empty {
+    cursor: default;
+}
+
+.selected-dates {
+    margin-top: 15px;
+    text-align: center;
+}
+
+#track-type .option {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 60px;
+    margin: 10px 0;
+}
+
+.calendar-next-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #FFA500;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    font-family: 'HancomMalangMalang-Regular', sans-serif;
+    transition: background-color 0.3s;
+}
+
+.calendar-next-button:hover {
+    background-color: #FF8C00;
+}
+

@@ -1,0 +1,51 @@
+body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #F0A202;
+  }
+  
+  .button-container {
+    display: flex;
+    gap: 20px; /* 버튼 사이의 간격 */
+  }
+  
+ #button1 {
+    padding: 20px 25px;
+    font-size: 20px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    background-color: #333;
+    color: white;
+    border-radius: 8px;
+    position: relative;
+    text-decoration: none;
+  }
+#button2 {
+    padding: 20px 5px;
+    font-size: 20px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    background-color: #333;
+    color: white;
+    border-radius: 8px;
+    position: relative;
+    text-decoration: none;
+  }
+  .color-button:hover {
+    background-color: #555;
+  }
+  
+  .color-button.left-hover {
+    background-color: #F0A202; /* 왼쪽 호버 색상 */
+  }
+  
+  .color-button.right-hover {
+    background-color: #F0A202; /* 오른쪽 호버 색상 */
+  }

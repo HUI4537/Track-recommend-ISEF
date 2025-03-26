@@ -1,0 +1,38 @@
+<!-- 님들아 미안한데 이거 자유 게시판 index임 ㅇㅋ? -->
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>자전거 여행 루트 공유</title>
+    <link rel="stylesheet" href="../static/bulletin_board/style.css">
+    <link rel="stylesheet" href="../static/Menu/menu_style.css">
+    <script src="../static/Menu/menu_script.js"></script>
+    <div class="header">
+        <div class="hamburger-menu" id="hamburger-menu">&#9776;</div>
+        <div class="logo_container">
+            <img src="../static/logo.png" alt="logo" class="logo" />
+        </div>
+        <nav class="sidebar" id="sidebar">
+            <ul class="sidebar-nav">
+                <li class="nav-item"><a href="../" class="nav-link">홈</a></li>
+                <li class="nav-item"><a href="#" class="nav-link">설정</a></li>
+            </ul>
+        </nav>
+    </div> 
+</head>
+<body>
+    <main id="main-content">
+        <!-- 동적으로 내용이 채워질 영역 -->
+    </main>
+
+    <button class="write-button" id="writeButton">글 작성하기</button>
+    
+    <!-- 이미지 업로드를 위한 숨겨진 input -->
+    <input type="file" id="imageInput" accept="image/*" class="hidden-input" multiple>
+    
+    <script src="../static/bulletin_board/app.js"></script>
+    
+</body>
+
+</html>

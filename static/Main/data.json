@@ -1,0 +1,110 @@
+{
+  "Gyeongju": {
+    "특징": {
+      "description": "경주는 한반도에서 가장 오래된 도시 중 하나로, 신라 천년의 역사를 품고 있습니다. 첨성대와 안압지 같은 유적지는 한국의 고대 문화를 생생히 보여줍니다. 도시 전체가 유네스코 세계문화유산으로 지정되어 역사적 가치를 더합니다. 고요한 경주의 밤 풍경은 방문객들에게 잊을 수 없는 추억을 선사합니다.",
+      "image": "https://i0.wp.com/blog.findmybucketlist.com/wp-content/uploads/2020/10/%EA%B2%BD%EC%A3%BC-%EB%B3%B4%EC%A0%952.jpg?resize=792%2C446&ssl=1g"
+    },
+    "문화": {
+      "description": "불국사와 석굴암은 신라 불교 문화를 대표하는 유적입니다. 매년 불교 행사와 전통 축제가 열려 지역 문화를 체험할 수 있습니다. 경주는 신라 왕조의 예술과 공예가 살아 숨 쉬는 도시입니다. 전통 공예품과 신라 시대의 유물은 방문객들에게 깊은 인상을 남깁니다.",
+      "image": "https://i.namu.wiki/i/XO6E06_qrvaiZnbaLsHC-Ov1z4WI8vRqSn_R9IqHobEgHD2gYLLN3Ldi3zvnFLRYcLTQmWpRuAdsfH_2IrNNPQ.webp"
+    },
+    "역사": {
+      "description": "신라의 수도 경주는 삼국 통일의 영광을 간직한 도시입니다. 불국사와 석굴암은 당시 건축 기술의 정수를 보여줍니다. 동양에서 가장 오래된 천문대 첨성대는 신라의 과학적 업적을 상징합니다. 경주는 과거와 현재가 공존하는 역사의 도시입니다.",
+      "image": "https://tour.gb.go.kr/file/thumbnail.do?img_physical=2021112474058989.png"
+    },
+    "특산물": {
+      "description": "경주빵은 팥소와 부드러운 식감으로 사랑받는 간식입니다. 지역 한우는 신선한 육질로 전국적인 명성을 얻고 있습니다. 전통주인 경주법주는 지역 특유의 맛을 자랑합니다. 다양한 특산물은 경주 여행의 즐거움을 더해줍니다.",
+      "image": "https://i.namu.wiki/i/kc99KQhDzrqRA0TYORLtLWmrx2MLLJwaPykofych-ntErc3tX64HeOWgWlGrzHtuWX9zHiDtSH8U3eUR_BZQ5w.webp"
+    }
+  },
+"Daejeon": {
+    "특징": {
+      "description": "대전은 한국 과학과 기술 혁신의 중심지로 대덕연구단지가 위치합니다. 지리적으로 한국 중앙에 위치하여 교통의 요충지 역할을 합니다. 국제 과학 행사가 자주 열려 학문적 발전을 보여줍니다. 또한, 대전은 잘 정비된 자전거 도로와 친환경적인 교통 시설을 갖추고 있어 여유롭게 도시를 탐방하기 좋습니다.",
+      "image": "https://cdn.travelview.co.kr/travelview/2020/07/21035701/4-7.jpg"
+    },
+    "문화": {
+      "description": "대전은 과학과 예술이 융합된 독특한 문화를 제공합니다. 과학박물관과 예술의전당은 방문객들에게 흥미로운 경험을 선사합니다. 다양한 전시와 축제가 대전의 활기찬 문화를 돋보이게 합니다. 가족과 함께 즐길 수 있는 교육적이고 창의적인 행사가 많습니다.",
+      "image": "https://cdn.imweb.me/upload/S20190806b57d6d917403a/e6ee784b98c5b.jpg"
+    },
+    "역사": {
+      "description": "대전은 조선 시대부터 교통의 중심지로 발전해 왔습니다. 일제강점기에는 철도와 도로 개발이 활발히 이루어졌습니다. 현대에는 대덕연구단지 설립으로 한국의 과학 수도로 자리 잡았습니다. 대전의 역사적 발전은 도시의 현재를 잘 보여줍니다.",
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTncLTV6SJBMU9gN6KfYx8dWiWmg40ODxZAaw&s"
+    },
+    "특산물": {
+      "description": "대전의 대표적인 특산물로는 성심당 빵이 있습니다. 성심당의 튀김소보로는 전국적으로 유명한 간식입니다. 또한, 대전에서 나는 신선한 복숭아와 무화과도 인기가 높습니다. 대전 전통시장에서 다양한 특산물을 만날 수 있습니다.",
+      "image": "https://upload.wikimedia.org/wikipedia/commons/f/fc/Sungsimdang_2019.jpg"
+    }
+  },
+  "Busan": {
+    "특징": {
+      "description": "부산은 한국 최대의 항구 도시로 아름다운 해변이 유명합니다. 해운대와 광안리는 국내외 관광객들에게 사랑받는 명소입니다. 다양한 해양 활동과 축제가 도시의 활기를 더합니다. 부산은 전통과 현대가 어우러진 매력적인 도시입니다.",
+      "image": "https://www.visitbusan.net/uploadImgs/files/cntnts/20200101173014369"
+    },
+    "문화": {
+      "description": "부산은 국제 영화제를 통해 세계적으로 알려진 문화 도시입니다. 감천문화마을은 예술과 지역 역사가 융합된 공간입니다. 해양 축제는 부산의 독특한 매력을 한층 높여줍니다. 풍부한 해산물 요리는 부산을 대표하는 문화의 일부입니다.",
+      "image": "https://segyelocalnews.com/news/data/20220331/p1065573263381396_335_thum.jpg"
+    },
+    "역사": {
+      "description": "부산은 삼국 시대부터 무역과 교역의 중심지로 성장했습니다. 조선 시대에는 일본과의 교역을 담당하는 항구로 번성했습니다. 근대에는 한국 경제와 물류의 중심지로 자리 잡았습니다. 지금도 부산은 대한민국의 중요한 교역 도시입니다.",
+      "image": "https://cdn.crowdpic.net/detail-thumb/thumb_d_36074C4D78B46D3D326A14FA759D8420.jpg"
+    },
+    "특산물": {
+      "description": "부산의 대표 특산물은 신선한 어묵과 다양한 해산물입니다. 자갈치 시장은 해산물을 직접 구입할 수 있는 명소로 유명합니다. 부산 어묵은 독특한 맛과 품질로 전국적으로 사랑받고 있습니다. 해산물 요리는 부산 여행의 하이라이트입니다.",
+      "image": "https://oasisprodproduct.edge.naverncp.com/69651/detail/detail_69651_0_28e4a03b-e05a-4af9-8846-1ec3c1f486c6.jpg"
+    }
+  },
+  "Seoul": {
+    "특징": {
+      "description": "서울은 대한민국의 수도로, 전통과 현대가 조화를 이루는 도시입니다. 경복궁과 북촌 한옥마을 같은 유적은 과거의 흔적을 보여줍니다. 한강을 따라 펼쳐진 현대적인 풍경은 서울의 활력을 상징합니다. 다양한 국제 문화 행사가 서울의 매력을 더합니다.",
+      "image": "https://love.seoul.go.kr/tmda/Pds/Board/seoul_news_write/201712_06_1.jpg"
+    },
+    "문화": {
+      "description": "서울은 전통과 현대 문화가 어우러진 장소입니다. 광화문과 인사동은 전통 문화를 체험할 수 있는 대표적인 명소입니다. 다양한 박물관과 예술 전시는 서울의 다채로운 문화를 보여줍니다. 서울 곳곳에서 한국의 역사와 현대를 동시에 느낄 수 있습니다.",
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcST0_pMV-VWzSye2Kc6QaEewO-xtuvEAwNAnQ&s"
+    },
+    "역사": {
+      "description": "서울은 조선 시대부터 대한민국의 중심지로 발전해 왔습니다. 경복궁과 창덕궁 같은 유적은 조선 왕조의 역사를 잘 보여줍니다. 한양도성과 북촌은 한국의 전통 건축을 경험할 수 있는 명소입니다. 서울의 역사는 과거와 현재가 공존하는 특별한 경험을 제공합니다.",
+      "image": "https://i1.wp.com/www.agoda.com/wp-content/uploads/2019/05/Gyeongbokgung-palace-Seoul-Front-view-of-palace.jpg"
+    },
+    "특산물": {
+      "description": "서울의 대표 특산물은 아름다운 한복과 다양한 떡입니다. 인사동에서는 전통 공예품과 함께 지역 음식을 체험할 수 있습니다. 특히 한복은 전통 문화의 상징으로 많은 관광객들에게 인기입니다. 서울은 한국 전통 문화를 체험하기에 가장 좋은 장소입니다.",
+      "image": "https://dry7pvlp22cox.cloudfront.net/mrt-images-prod/2024/07/09/x1DU/Rv7pwjgMaK.jpg"
+    }
+  },
+  "Incheon": {
+    "특징": {
+      "description": "인천은 대한민국의 국제 관문으로, 현대적인 도시와 자연이 어우러져 있습니다. 송도 국제도시는 첨단 기술과 아름다운 도시 설계를 자랑합니다. 월미도와 강화도는 관광객들에게 특별한 경험을 제공합니다. 인천은 국제 교류와 물류의 중심지로 자리 잡고 있습니다.",
+      "image": "https://www.airportsc.kr/data/file/visual/990866203_iltTQf6q_ed9ef7a81dd457bec9969ff832ea87ef45d5d7d1.jpg"
+    },
+    "문화": {
+      "description": "인천은 다문화적인 차이나타운과 전통적인 강화도 마을이 공존합니다. 펜타포트 록 페스티벌은 인천의 대표적인 국제 문화 행사입니다. 지역 주민과 관광객이 함께 즐길 수 있는 다양한 축제가 열립니다. 인천은 전통과 현대를 동시에 느낄 수 있는 도시입니다.",
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIkA7Zm_KQLlFMX0b7bnRgrwcML7cZC5-VQQ&s"
+    },
+    "역사": {
+      "description": "인천은 삼국 시대부터 중요한 항구 도시로 발전해 왔습니다. 개항 이후 서양 문물이 들어오며 한국의 현대화를 이끌었습니다. 강화도와 월미도는 역사적 가치가 높은 관광 명소로 자리 잡았습니다. 인천은 한국의 과거와 현재를 연결하는 중요한 도시입니다.",
+      "image": "https://cdn.incheonilbo.com/news/photo/201705/762342_291643_4902.jpg"
+    },
+    "특산물": {
+      "description": "인천의 대표 특산물로는 강화 속노랑 고구마와 계양 무가 있습니다. 강화도 고구마는 부드럽고 달콤한 맛으로 유명합니다. 계양 무는 신선하고 영양가 높은 지역 농산물로 사랑받고 있습니다. 인천의 전통 시장에서는 다양한 신선한 특산물을 구매할 수 있습니다.",
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQMfqgQlae_-EwTkvrkoYwYa-HGzFF59MYzCg&s"
+    }
+  },
+  "Jeju": {
+    "특징": {
+      "description": "제주는 한국의 남쪽에 위치한 섬으로 자연 경관이 아름다운 곳입니다. 한라산과 성산 일출봉 같은 관광 명소는 세계적으로도 유명합니다. 제주는 사계절 내내 다양한 활동을 즐길 수 있는 여행지입니다. 독특한 생태계와 자연미가 제주의 매력을 더합니다.",
+      "image": "https://san.chosun.com/news/photo/201911/13272_55951_153.jpg"
+    },
+    "문화": {
+      "description": "제주는 해녀 문화와 독특한 돌담길로 잘 알려져 있습니다. 민속 마을에서는 제주의 전통적인 생활 방식을 체험할 수 있습니다. 해양 축제와 전통 문화 행사는 제주의 매력을 한층 높입니다. 지역 주민의 삶과 자연이 조화된 모습을 엿볼 수 있습니다.",
+      "image": "https://img.khan.co.kr/news/2020/03/17/2020031801002169200183081.jpg"
+    },
+    "역사": {
+      "description": "제주는 신라 시대부터 한국의 일부로 편입되었습니다. 탐라국 시절부터 독특한 자치 문화를 형성해 왔습니다. 민속촌과 다양한 유적은 제주의 과거를 생생히 보여줍니다. 현재 제주는 대한민국의 관광과 생태 중심지로 자리 잡고 있습니다.",
+      "image": "https://www.agoda.com/wp-content/uploads/2024/07/Jeju-Island-1244x700.jpg"
+    },
+    "특산물": {
+      "description": "제주의 대표 특산물로는 신선한 감귤과 흑돼지가 있습니다. 감귤은 달콤하고 신선한 맛으로 전국적으로 사랑받고 있습니다. 흑돼지는 독특한 풍미로 제주에서 꼭 맛봐야 할 음식입니다. 제주의 전통시장은 신선한 농산물과 특산물을 구매할 수 있는 곳입니다.",
+      "image": "https://api.cdn.visitjeju.net/photomng/imgpath/202201/17/148eb222-002a-49ff-9ae8-9f9f7d634e6c.jpg"
+    }
+  }
+}

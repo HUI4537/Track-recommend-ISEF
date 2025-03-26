@@ -1,0 +1,85 @@
+.hamburger-menu {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    width: 55px;
+    height: 55px;
+    background-color: #F0A202;
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5em;
+    cursor: pointer;
+    z-index: 1000; /* Ensures the menu is on top of the map */
+    text-align: center;
+    line-height: 40px; /* Ensures the text is vertically centered */
+    z-index: 1600;
+}
+
+.sidebar {
+    position: fixed;
+    top: -70px;
+    left: -250px; /* Sidebar hidden by default */
+    width: 250px;
+    height: 150%;
+    background-color: #F0A202;
+    transition: left 0.3s ease-in-out;
+    padding-top: 60px;
+    z-index:3000; /* Ensures the sidebar is on top of the map */
+}
+
+.sidebar-nav {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.nav-item {
+    margin: 20px 0;
+    text-align: center;
+}
+
+.nav-link {
+    color: #fff;
+    text-decoration: none;
+    font-size: 1.2em;
+}
+
+.nav-link:hover {
+    text-decoration: underline;
+}
+
+.sidebar.active {
+    left: 0; /* Show sidebar */
+}
+.logo_container {
+    position: absolute; /* 절대 위치 설정 */
+    top: 10px;
+    left: 50%;
+    transform: translateX(-43.75%); /* 중앙 정렬 */
+    z-index: 1000; /* 지도 위에 배치되도록 z-index 설정 */
+}
+.logo_container img {
+    max-width: 100%;
+    height: auto;
+}
+.logo {
+    width: 100%; /* 이미지 너비를 절반으로 설정 */
+    height: auto; /* 높이는 자동으로 설정 */
+    
+}
+.header {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 90px; /* 원하는 높이로 조정 */
+    background-color: #ffffff;
+    color: black;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000; /* 다른 요소 위로 고정 */
+}

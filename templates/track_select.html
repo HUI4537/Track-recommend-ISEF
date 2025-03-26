@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>트랙 선택</title>
+    <style>
+        .track-container {
+            display: flex;
+            margin: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .track-images {
+            display: flex;
+            gap: 10px;
+        }
+
+        .track-image {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+
+        .track-info {
+            margin-left: 20px;
+            flex-grow: 1;
+        }
+
+        .delete-btn {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background-color: #ff4444;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .track-container:hover {
+            background-color: #f5f5f5;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>내 트랙 목록</h1>
+    
+    <div id="tracks-list">
+        {% for track in tracks %}
+        <div class="track-container" onclick="selectTrack('{{ track.id }}')">
+            <div class="track-images">
+                <img src="{{ track.first_restaurant_image }}" alt="첫 번째 식당" class="track-image">
+                <img src="{{ track.last_restaurant_image }}" alt="마지막 식당" class="track-image">
+            </div>
+            <div class="track-info">
+                <h3>{{ track.name }}</h3>
+                <p>생성일: {{ track.created_date }}</p>
+                <p>경유지: {{ track.places|join(', ') }}</p>
+            </div>
+            <button class="delete-btn" onclick="confirmDelete(event, '{{ track.id }}')">삭제</button>
+        </div>
+        {% endfor %}
+    </div>
+
+    <script>
+        function selectTrack(trackId) {
+            window.location.href = `/Journey?track_id=${trackId}`;
+        }
+
+        function confirmDelete(event, trackId) {
+            event.stopPropagation();
+            if (confirm('이 트랙을 삭제하시겠습니까?')) {
+                fetch(`/delete_track/${trackId}`, {
+                    method: 'DELETE',
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        location.reload();
+                    } else {
+                        alert('트랙 삭제에 실패했습니다.');
+                    }
+                });
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id = "title" >Who Are You?</title> 
+    <link rel="stylesheet" href="/static/Survey/survey.css">
+    <link rel="stylesheet" href="/static/Menu/menu_style.css">
+    <script src="/static/Menu/menu_script.js"></script>
+    <!-- JavaScript 파일을 스타일시트로 연결하지 말고, script 태그로 연결 -->
+    <!-- <link rel="stylesheet" href="/static/Survey/survey.js"> 제ㄴ거 -->
+    <style>
+        .question h3 {
+            font-size: 1.8em;  /* 크기 조절 */
+            line-height: 1.4;  /* 줄 간격 조절 */
+            margin: 20px 0;    /* 상하 여백 추가 */
+            text-align: center;
+        }
+    </style>
+</head>
+<body> 
+    <div class="header">
+        <div class="hamburger-menu" id="hamburger-menu">&#9776;</div>
+        <div class="logo_container">
+            <img src="/picture/logo/logo.png" alt="logo" class="logo" />
+        </div>
+        <nav class="sidebar" id="sidebar">
+            <ul class="sidebar-nav">
+                <li class="nav-item"><a href="../" class="nav-link">홈</a></li>
+                <li class="nav-item"><a href="#" class="nav-link">설정</a></li>
+            </ul>
+        </nav>
+    </div>
+    <div class="container">
+        
+            
+
+        <section class="question" id="question-1">
+            <h3>맞춤 여행 트랙을 제공해드리기 위해 간단한 정보를 입력 받을게요</h3>
+
+            <div class="start_box">
+                
+                <p id="start_button">설문시작 ↓</p>
+            </div>
+            
+            <div class="question-box">
+                <p>Q. 나이?</p>
+                <div class="option-group" id="age_range">
+                    <div class="option" data-value="10-20">10-20</div>
+                    <div class="option" data-value="20-30">20-30</div>
+                    <div class="option" data-value="30-50">30-50</div>
+                    <div class="option" data-value="50+">60+</div>
+                </div>
+            </div>
+
+            <div class="question-box" id="question-2">
+                <p>Q. 성별?</p>
+                <div class="option-group" id="gender">
+                    <div class="option" data-value="male">남자</div>
+                    <div class="option" data-value="female">여자</div>
+                </div>
+            </div>
+
+            <div class="question-box" id="nationality-select">
+                <p>Q. 인종?</p>
+                <div class="option-group" id="nationality">
+                    <div class="option" data-value="Asian">아시아인</div>
+                    <div class="option" data-value="American">아메리카인</div>
+                    <div class="option" data-value="European">유럽인</div>
+                    <div class="option" data-value="African">아프리카인</div>
+                    <div class="option" data-value="Arab">중동인</div>
+                    <div class="option" data-value="South_American">남아메리카인</div>
+                </div>
+                
+            </div>
+
+            <div class="question-box" id="question-4">
+                <p>Q. 여행 취향?</p>
+                <input class="typing" type="text" id="travel_pref" placeholder="  Enter your travel taste" />
+            </div>
+            
+            <div class="question-box" id="question-5">
+                <p>Q. 음식 취향?</p>
+                <input class="typing" type="text" id="food_pref" placeholder="  Enter your food taste" />
+            </div>  
+            
+            <div class="question-box" id="question-6">
+                <p>Q. 언제 여행을 원하시나요??</p>
+                <div class="calendar-container">
+                    <div class="date-picker">
+                        <div class="calendar-header">
+                            <h3 id="calendar-title"></h3>
+                        </div>
+                        <div class="calendar" id="calendar">
+                            <!-- 캘린더는 JavaScript로 동적 생성됩니다 -->
+                        </div>
+                    </div>
+                    <div class="selected-dates">
+                        <p>Start: <span id="start-date">선택해주세요</span></p>
+                        <p>End: <span id="end-date">선택해주세요</span></p>
+                    </div>
+                    <button class="calendar-next-button">다음</button>
+                </div>
+            </div>
+
+            <div class="question-box" id="question-7">
+                <p>Q. 당신이 선호하는 타입은?</p>
+                <div class="option-group" id="track-type">
+                    <div class="option" data-value="linear">직선형 트랙</div>
+                    <div class="option" data-value="circular">원형 트랙</div>
+                </div>
+            </div>
+            
+
+            
+        </section>
+
+        <button class="next-button" onclick="submitData()">다음</button>
+    </div>
+
+    <!-- JavaScript 파일을 body 끝부분에 추가 -->
+    <script src="/static/Survey/survey.js"></script>
+</body>
+</html>

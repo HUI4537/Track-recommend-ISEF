@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시글 상세</title>
+    <link rel="stylesheet" href="../static/bulletin_board/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <!-- 뒤로 가기 버튼 -->
+        <button class="back-button" onclick="history.back()">←</button>
+        <div class="logo">자전거 여행</div>
+    </nav>
+    
+    <main id="post-content">
+        <!-- 동적으로 채워질 영역 -->
+    </main>
+
+    <script>
+        const postId = window.location.pathname.split('/').pop();
+        const postContent = document.getElementById('post-content');
+    
+        async function loadPost() {
+            try {
+                const response = await fetch(`/api/posts/${postId}`);
+                const data = await response.json();
+                
+                postContent.innerHTML = `
+                    <div class="post-detail">
+                        <h1 class="post-title">${data.post.title}</h1>
+                        <div class="post-author">
+                            <img src="../static/bulletin_board/profile.jpg" alt="프로필" class="author-profile">
+                            <span>예시사용자</span>
+                        </div>
+                        
+                        <div class="image-slider">
+                            <div class="image-container">
+                                ${data.images.map(image => `
+                                    <img src="${image}" alt="" class="post-image">
+                                `).join('')}
+                            </div>
+                        </div>
+                        
+                        <div class="post-content-text">
+                            ${data.post.content}
+                        </div>
+                        
+                        <div class="like-section">
+                            <span class="like-count">${data.post.likes}</span>
+                            <button class="like-button ${data.is_liked ? 'liked' : ''}" onclick="toggleLike()">
+                                <svg class="heart-icon" viewBox="0 0 24 24" width="24" height="24">
+                                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                                </svg>
+                            </button>
+                        </div>
+                        
+                        <div class="comments-section">
+                            <div class="comment-input">
+                                <input type="text" placeholder="댓글을 입력하세요" id="commentInput">
+                                <button onclick="submitComment()">게시</button>
+                            </div>
+                            
+                            <div class="comments-list">
+                                ${data.comments.map(comment => `
+                                    <div class="comment">
+                                        <div class="comment-header">
+                                            <img src="../static/bulletin_board/profile.jpg" alt="프로필" class="comment-profile">
+                                            <span class="comment-author">예시사용자</span>
+                                            <span class="comment-date">${new Date(comment.created_at).toLocaleString()}</span>
+                                        </div>
+                                        <div class="comment-content">${comment.content}</div>
+                                        <div class="comment-like">
+                                            <span class="like-count">${comment.likes}</span>
+                                            <button class="like-button ${comment.is_liked ? 'liked' : ''}" onclick="toggleCommentLike(${comment.id}, this)">
+                                                <svg class="heart-icon" viewBox="0 0 24 24" width="16" height="16">
+                                                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } catch (error) {
+                console.error('Error loading post:', error);
+            }
+        }
+    
+        async function toggleLike() {
+            try {
+                const likeButton = document.querySelector('.like-button');
+                const likeCount = document.querySelector('.like-count');
+                const isLiked = likeButton.classList.contains('liked');
+                
+                const response = await fetch(`/api/posts/${postId}/like`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ is_liked: !isLiked }) // 현재 상태 반전
+                });
+
+                if (response.ok) {
+                    likeButton.classList.toggle('liked');
+                    const count = parseInt(likeCount.textContent, 10);
+                    likeCount.textContent = isLiked ? count - 1 : count + 1; // 상태에 따라 증가/감소
+                }
+            } catch (error) {
+                console.error('Error toggling post like:', error);
+            }
+        }
+    
+        async function toggleCommentLike(commentId, element) {
+            try {
+                const isLiked = element.classList.contains('liked');
+                const response = await fetch(`/api/comments/${commentId}/like`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ is_liked: !isLiked }) // 현재 상태 반전
+                });
+                if (response.ok) {
+                    const likeCount = element.previousElementSibling;
+                    element.classList.toggle('liked');
+                    const count = parseInt(likeCount.textContent, 10);
+                    likeCount.textContent = isLiked ? count - 1 : count + 1; // 상태에 따라 증가/감소
+                }
+            } catch (error) {
+                console.error('Error toggling comment like:', error);
+            }
+        }
+
+    
+        async function submitComment() {
+            const input = document.getElementById('commentInput');
+            const content = input.value.trim();
+            
+            if (!content) return;
+            
+            try {
+                const response = await fetch('/api/comments', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        post_id: postId,
+                        user_id: 1,
+                        content: content
+                    })
+                });
+                
+                if (response.ok) {
+                    input.value = '';
+                    loadPost(); // 댓글 목록 새로고침
+                }
+            } catch (error) {
+                console.error('Error submitting comment:', error);
+            }
+        }
+    
+        // 페이지 로드 시 게시글 정보 불러오기
+        loadPost();
+    </script>
+</body>
+</html>
