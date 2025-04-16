@@ -28,13 +28,11 @@ body {
 
 .logo_container {
     position: absolute;
-    top: 50%;
+
     left: 50%;
-    transform: translate(-50%, -50%);
-    width: 156px;
+    transform: translateX(-43.75%);
     z-index: 1000;
 }
-
 .logo {
     width: 100%;
     height: auto;

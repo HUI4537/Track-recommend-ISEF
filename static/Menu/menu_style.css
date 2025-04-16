@@ -56,7 +56,10 @@
 }
 .logo_container {
     position: absolute; /* 절대 위치 설정 */
-    top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
     left: 50%;
     transform: translateX(-43.75%); /* 중앙 정렬 */
     z-index: 1000; /* 지도 위에 배치되도록 z-index 설정 */

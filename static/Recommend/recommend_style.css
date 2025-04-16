@@ -31,7 +31,7 @@ body {
 
 .logo_container {
     position: absolute;
-    top: 10px;
+
     left: 50%;
     transform: translateX(-43.75%);
     z-index: 1000;
