@@ -24,35 +24,35 @@
   <!-- 프로필 내용 -->
   <section class="content">
     <div class="profile-details">
-      <h3>계정 정보</h3>
+      <h3>Account info</h3>
       <br>
         <table>
             <tr>
-                <td>사용자명:</td>
+                <td>Username:</td>
                 <td>{{ account['username'] }}</td>
             </tr>
             <tr>
-                <td>비밀번호:</td>
+                <td>Password:</td>
                 <td>******</td>
             </tr>
             <tr>
-                <td>이메일:</td>
+                <td>Email:</td>
                 <td>{{ account['email'] }}</td>
             </tr>
         </table>
     </div>
     <div class="profile-tracks">
-        <h3>내 트랙 목록</h3>
+        <h3>Track List</h3>
         {% if tracks %}
             {% for track in tracks %}
                 <div class="track-item-container" onclick="location.href='/Journey?track_id={{ track.id }}'">
                     
                     <div class="track-info">
-                        <p>생성일: {{ track.created_at }}</p>
-                        <p>장소들: {{ track.track_places }}</p>
-                        <p>시작일: {{ track.start_date or '미지정' }}</p>
-                        <p>종료일: {{ track.end_date or '미지정' }}</p>
-                        <p>트랙 타입: {{ track.track_type or '미지정' }}</p>
+                        <p>Date of creation: {{ track.created_at }}</p>
+                        <p>Place: {{ track.track_places }}</p>
+                        <p>Start Date: {{ track.start_date or '미지정' }}</p>
+                        <p>End Date: {{ track.end_date or '미지정' }}</p>
+                        <p>Track type: {{ track.track_type or '미지정' }}</p>
                     </div>
                     <!-- <button class="delete-btn" onclick="confirmDelete(event, {{ track.id }})">삭제</button> -->
                 </div>

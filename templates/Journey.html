@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Route Map</title>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDkPWI-Lb7GbibqP7_PUkcICADaN3PFXU0"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDkPWI-Lb7GbibqP7_PUkcICADaN3PFXU0&language=en"></script>
     <link rel="stylesheet" href="../static/Menu/menu_style.css">
     <link rel="stylesheet" href="../static/Journey/journey.css">
     <link rel="stylesheet" href="../static/Main/main_style.css">
@@ -21,7 +21,8 @@
                 zoomControl: false, // 확대/축소 버튼 비활성화
                 streetViewControl: false, // 거리 뷰 아이콘 비활성화
                 mapTypeControl: false, // 지도 유형 선택 비활성화
-                fullscreenControl: false
+                fullscreenControl: false,
+                language: 'en' // 지도 언어를 영어로 설정
             });
             const decodeHtml = (html) => {
                 const parser = new DOMParser();

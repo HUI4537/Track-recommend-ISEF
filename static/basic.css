@@ -1,0 +1,119 @@
+/* 기본 리셋 및 공통 스타일 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    background-color: #f4f4f4;
+}
+
+/* 공통 컨테이너 스타일 */
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 15px;
+}
+
+/* 공통 버튼 스타일 */
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+.btn:hover {
+    background-color: #0056b3;
+}
+
+/* 공통 폼 스타일 */
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-control {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+/* 공통 카드 스타일 */
+.card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 15px;
+    margin-bottom: 15px;
+}
+
+/* 공통 헤더 스타일 */
+.header {
+    background-color: #333;
+    color: white;
+    padding: 1rem;
+    text-align: center;
+}
+
+/* 공통 네비게이션 스타일 */
+.nav {
+    background-color: #333;
+    padding: 1rem;
+}
+
+.nav a {
+    color: white;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+}
+
+.nav a:hover {
+    background-color: #555;
+    border-radius: 4px;
+}
+
+/* 공통 테이블 스타일 */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1rem;
+}
+
+.table th,
+.table td {
+    padding: 8px;
+    border: 1px solid #ddd;
+}
+
+.table th {
+    background-color: #f4f4f4;
+}
+
+/* 공통 알림 메시지 스타일 */
+.alert {
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.alert-error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}

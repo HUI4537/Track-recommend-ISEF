@@ -25,15 +25,15 @@
     <p></p>
     <h1>Reorder Places</h1>
     <div class="recommendation-section">
-        <button id="ai-recommend-button">최적 자동 추천</button>
-        <p class="recommendation-description">선택된 경로 유형에 따라 최적의 방문 순서를 자동으로 추천해드립니다.</p>
+        <button id="ai-recommend-button">Automatic Track Optimization</button>
+        <p class="recommendation-description">We automatically recommend the optimal order of visit according to the selected route type.</p>
     </div>
     <div id="place-list">
         {% for place in place_list %}
             <div class="place-box" data-place-name="{{ place }}" draggable="true">{{ place }}</div>
         {% endfor %}
     </div>
-    <button id="save-button">저장하기</button>
+    <button id="save-button">Save</button>
 
    
 </body>

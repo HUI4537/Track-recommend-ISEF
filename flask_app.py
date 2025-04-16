@@ -17,13 +17,18 @@ from route_finder import get_route, get_waypoints
 import pandas as pd
 from geopy.geocoders import Nominatim
 from geopy.distance import geodesic
-from gtts import gTTS
 from schedule_maker import tsp_shortest_path, astar_shortest_path
+
+# 현재 Python 파일의 디렉터리 기준으로 경로 설정
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+BULLETIN_BOARD_DATABASE = os.path.join(BASE_DIR, 'board.db')
+BULLETIN_BOARD_UPLOAD_FOLDER = os.path.join(BASE_DIR, 'static', 'uploads')
 
 app = Flask(__name__)
 CORS(app)  # CORS 설정 추가
 
 app.secret_key = app.secret_key or 'default_secret_key'
+app.config['UPLOAD_FOLDER'] = BULLETIN_BOARD_UPLOAD_FOLDER
 
 import sqlite3  # SQLite 모듈 추가
 
@@ -38,16 +43,8 @@ def get_logindb_connection():
     return conn
 
 
-
-
-# 현재 Python 파일의 디렉터리 기준으로 경로 설정
-BASE_DIR = os.path.abspath(os.path.dirname(__file__))
-BOARD_DATABASE = os.path.join(BASE_DIR, 'board.db')
-BOARD_UPLOAD_FOLDER = os.path.join(BASE_DIR, 'static', 'uploads')
-    
-
-def get_budb_connection():
-    conn = sqlite3.connect(BOARD_DATABASE)
+def get_bulletin_board_db_connection():
+    conn = sqlite3.connect(BULLETIN_BOARD_DATABASE)
     conn.row_factory = sqlite3.Row
     return conn
 
@@ -213,7 +210,7 @@ def post(post_id):
 # API 엔드포인트 - 게시글 목록 조회
 @app.route('/api/posts', methods=['GET'])
 def get_posts():
-    conn = get_budb_connection()
+    conn = get_bulletin_board_db_connection()
     
     # posts와 images 테이블 조인 (각 post_id에 대해 첫 번째 이미지만 가져옴)
     query = """
@@ -235,7 +232,7 @@ def get_posts():
 # API 엔드포인트 - 특정 게시글 조회
 @app.route('/api/posts/<int:post_id>', methods=['GET'])
 def get_post(post_id):
-    conn = get_budb_connection()
+    conn = get_bulletin_board_db_connection()
     post = conn.execute('SELECT * FROM posts WHERE id = ?', (post_id,)).fetchone()
     images = conn.execute('SELECT image_url FROM images WHERE post_id = ?', (post_id,)).fetchall()
     comments = conn.execute('SELECT * FROM comments WHERE post_id = ?', (post_id,)).fetchall()
@@ -253,7 +250,7 @@ def get_post(post_id):
 # API 엔드포인트 - 게시글 좋아요 증가
 @app.route('/api/posts/<int:post_id>/like', methods=['POST'])
 def toggle_post_like(post_id):
-    conn = get_budb_connection()
+    conn = get_bulletin_board_db_connection()
     cursor = conn.cursor()
 
     # 요청 데이터에서 좋아요 상태 받기
@@ -288,7 +285,7 @@ def add_comment():
     if not post_id or not user_id or not content:
         return jsonify({'error': 'Invalid data'}), 400
     
-    conn = get_budb_connection()
+    conn = get_bulletin_board_db_connection()
     cursor = conn.cursor()
     
     # 댓글 추가
@@ -315,7 +312,7 @@ def add_comment():
     return jsonify({'message': 'Comment added successfully'}), 201
 @app.route('/api/comments/<int:comment_id>/like', methods=['POST'])
 def toggle_comment_like(comment_id):
-    conn = get_budb_connection()
+    conn = get_bulletin_board_db_connection()
     cursor = conn.cursor()
 
     # 요청 데이터에서 좋아요 상태 받기
@@ -357,7 +354,7 @@ def create_post():
         if not all(field in data for field in required_fields):
             return jsonify({'error': f'Missing required fields. Required: {required_fields}'}), 400
         
-        conn = get_budb_connection()
+        conn = get_bulletin_board_db_connection()
         try:
             # 게시글 저장
             cursor = conn.execute(
@@ -425,48 +422,51 @@ def save_base64_image(base64_string, post_id):
 
 # 데이터베이스 초기화 함수
 def setup_database():
-    conn = get_budb_connection()
-    try:
-        conn.execute('''
-            CREATE TABLE IF NOT EXISTS posts (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                user_id INTEGER NOT NULL,
-                title TEXT NOT NULL,
-                content TEXT NOT NULL,
-                route_code TEXT,
-                likes INTEGER DEFAULT 0,
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-            )
-        ''')
-        
-        conn.execute('''
-            CREATE TABLE IF NOT EXISTS images (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                post_id INTEGER NOT NULL,
-                image_url TEXT NOT NULL,
-                FOREIGN KEY (post_id) REFERENCES posts (id)
-            )
-        ''')
-        
-        conn.execute('''
-            CREATE TABLE IF NOT EXISTS tracks (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                user_id INTEGER NOT NULL,
-                track_places TEXT NOT NULL,
-                start_date TEXT,
-                end_date TEXT,
-                track_type TEXT,
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                FOREIGN KEY (user_id) REFERENCES accounts (id)
-            )
-        ''')
-        
-        conn.commit()
-    except Exception as e:
-        print(f"데이터베이스 설정 오류: {e}")
-        conn.rollback()
-    finally:
-        conn.close()
+    conn = get_logindb_connection()
+    cursor = conn.cursor()
+    
+    # accounts 테이블 생성
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS accounts (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            username TEXT NOT NULL UNIQUE,
+            password TEXT NOT NULL,
+            email TEXT NOT NULL UNIQUE
+        )
+    ''')
+    
+    # tracks 테이블 생성
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS tracks (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            track_places TEXT NOT NULL,
+            start_date DATE,
+            end_date DATE,
+            track_type TEXT,
+            FOREIGN KEY (user_id) REFERENCES accounts (id)
+        )
+    ''')
+    
+    # user_survey 테이블 생성
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS user_survey (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER NOT NULL UNIQUE,
+            age INTEGER NOT NULL,
+            gender TEXT NOT NULL,
+            occupation TEXT NOT NULL,
+            education TEXT NOT NULL,
+            income TEXT NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (user_id) REFERENCES accounts (id)
+        )
+    ''')
+    
+    conn.commit()
+    conn.close()
 
 #추천 페이지 및 경로 ---------------------------------------------------------------------------------------
 
@@ -483,7 +483,7 @@ def Recommend():
 
     try:
         # restaurant.csv 파일 로드
-        csv_path = 'D:/2.Projects/11-23 sw동행 해커톤/cycccle-cyccle/restaurant.csv'
+        csv_path = os.path.join(os.path.dirname(__file__), 'restaurant.csv')
         restaurant_data = pd.read_csv(csv_path)
         print(restaurant_data)
     except Exception as e:
@@ -521,7 +521,7 @@ def Recommend():
         try:
             # 새로운 사용자 프로필
             new_user_profile = {"age_range": age_range, "gender": gender, "nationality": nationality, 
-                              "travel_pref": travel_pref, "food_pref": food_pref}
+                            "travel_pref": travel_pref, "food_pref": food_pref}
             
             # 추천 시스템 초기화 및 추천 실행
             recommender = PlaceRecommender(user_profiles, user_place_matrix)
@@ -651,9 +651,93 @@ def Or():
 def official_survey():
     return render_template('official.html')
 
-@app.route('/Survey')
+@app.route('/Survey', methods=['GET', 'POST'])
 def Survey():
-    return render_template('Survey.html')
+    if 'loggedin' not in session:
+        return redirect(url_for('login'))
+        
+    if request.method == 'POST':
+        try:
+            # POST 데이터 받기
+            age_range = request.form.get('age_range')
+            gender = request.form.get('gender')
+            nationality = request.form.get('nationality')
+            travel_pref = request.form.get('travel_pref')
+            food_pref = request.form.get('food_pref')
+            start_date = request.form.get('start_date')
+            end_date = request.form.get('end_date')
+            track_type = request.form.get('track_type')
+            
+            # 나이 범위를 숫자로 변환 (예: "20-30" -> 25)
+            age = 0
+            if age_range == "10-20":
+                age = 15
+            elif age_range == "20-30":
+                age = 25
+            elif age_range == "30-50":
+                age = 40
+            elif age_range == "50+":
+                age = 60
+            
+            conn = get_logindb_connection()
+            cursor = conn.cursor()
+            
+            # 기존 설문 데이터가 있는지 확인
+            cursor.execute('SELECT id FROM user_survey WHERE user_id = ?', (session['id'],))
+            existing_survey = cursor.fetchone()
+            
+            if existing_survey:
+                # 기존 데이터 업데이트
+                cursor.execute('''
+                    UPDATE user_survey 
+                    SET age = ?, gender = ?, nationality = ?, 
+                        travel_pref = ?, food_pref = ?, 
+                        start_date = ?, end_date = ?, track_type = ?,
+                        updated_at = CURRENT_TIMESTAMP
+                    WHERE user_id = ?
+                ''', (age, gender, nationality, travel_pref, food_pref, 
+                      start_date, end_date, track_type, session['id']))
+            else:
+                # 새로운 데이터 삽입
+                cursor.execute('''
+                    INSERT INTO user_survey (
+                        user_id, age, gender, nationality, 
+                        travel_pref, food_pref, start_date, 
+                        end_date, track_type
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ''', (session['id'], age, gender, nationality, 
+                      travel_pref, food_pref, start_date, 
+                      end_date, track_type))
+            
+            conn.commit()
+            conn.close()
+            
+            # URL 파라미터로 데이터 전달
+            params = {
+                'age_range': age_range,
+                'gender': gender,
+                'nationality': nationality,
+                'travel_pref': travel_pref,
+                'food_pref': food_pref,
+                'start_date': start_date,
+                'end_date': end_date,
+                'track_type': track_type
+            }
+            
+            return redirect(url_for('Recommend', **params))
+            
+        except Exception as e:
+            print(f"Error saving survey data: {e}")
+            return render_template('Survey.html', error="설문 데이터 저장 중 오류가 발생했습니다.")
+    
+    # GET 요청일 경우 기존 설문 데이터가 있다면 가져와서 표시
+    conn = get_logindb_connection()
+    cursor = conn.cursor()
+    cursor.execute('SELECT * FROM user_survey WHERE user_id = ?', (session['id'],))
+    survey_data = cursor.fetchone()
+    conn.close()
+    
+    return render_template('Survey.html', survey_data=survey_data)
 
 @app.route('/optimize_route', methods=['POST'])
 def optimize_route():
@@ -786,24 +870,3 @@ def check_range():
     except Exception as e:
         print("Error in /check-range:", str(e))  # 에러 메시지 출력
         return jsonify({"error": "Failed to check range"}), 500
-
-@app.route("/tts/<message>")
-def tts(message):
-    """TTS 음성을 생성하여 반환."""
-    tts = gTTS(message, lang="en")
-    filepath = "static/tts.mp3"
-    tts.save(filepath)
-    return send_file(filepath)
-
-@app.route("/get_restaurant_image/<restaurant_name>")
-def get_restaurant_image(restaurant_name):
-    try:
-        # CSV 파일 읽기
-        df = pd.read_csv('restaurant.csv')
-        # 식당 이름으로 검색하여 이미지 URL 가져오기
-        restaurant = df[df['Name'] == restaurant_name]
-        if not restaurant.empty:
-            return restaurant.iloc[0]['Img']
-    except Exception as e:
-        print(f"이미지 URL 가져오기 실패: {str(e)}")
-    return None

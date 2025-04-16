@@ -27,11 +27,11 @@ async function loadPostList() {
                         <div class="post-info">
                             <div class="post-author">
                                 <img src="../../static/bulletin_board/profile.jpg" alt="프로필" class="author-profile">
-                                <span>예시사용자</span>
+                                <span>Example user</span>
                             </div>
                             <div class="post-title">${post.title}</div>
                             <div class="post-stats">
-                                댓글 ${post.comment_count} · 좋아요 ${post.likes}
+                                Comment ${post.comment_count} · Like ${post.likes}
                             </div>
                         </div>
                     </div>
@@ -57,14 +57,14 @@ writeButton.addEventListener('click', () => {
         <div class="write-form">
             <!-- 뒤로 가기 버튼 -->
             <button type="button" class="back-button" onclick="handleBack()">←</button>
-            <h2>글 작성하기</h2>
+            <h2>Creating a Post</h2>
             <div class="form-group">
-                <label class="form-label">제목</label>
+                <label class="form-label">Title</label>
                 <input type="text" class="form-input" id="titleInput" placeholder="제목을 입력하세요">
             </div>
             
             <div class="form-group">
-                <label class="form-label">사진</label>
+                <label class="form-label">Picture</label>
                 <div class="image-upload">
                     <div class="image-upload-items" id="imagePreviewContainer">
                         <button type="button" class="image-upload-button" onclick="imageInput.click()">
@@ -72,20 +72,20 @@ writeButton.addEventListener('click', () => {
                         </button>
                     </div>
                 </div>
-                <small style="color: var(--text-gray)">최대 6장까지 업로드 가능</small>
+                <small style="color: var(--text-gray)">Up to 6 photos can be uploaded</small>
             </div>
             
             <div class="form-group">
-                <label class="form-label">경로 코드</label>
-                <input type="text" class="form-input" id="routeInput" placeholder="경로 코드를 입력하세요">
+                <label class="form-label">Path Code</label>
+                <input type="text" class="form-input" id="routeInput" placeholder="Please enter the path code">
             </div>
             
             <div class="form-group">
-                <label class="form-label">내용</label>
-                <textarea class="form-input" id="contentInput" rows="10" placeholder="내용을 입력하세요"></textarea>
+                <label class="form-label">Context</label>
+                <textarea class="form-input" id="contentInput" rows="10" placeholder="Please enter the contents"></textarea>
             </div>
             
-            <button type="button" class="submit-button" id="submit_button" onclick="submitPost()">업로드하기</button>
+            <button type="button" class="submit-button" id="submit_button" onclick="submitPost()">Upload</button>
         </div>
     `;
     

@@ -4,12 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Recommended Places</title>
+    <link rel="stylesheet" href="../static/basic.css">
     <link rel="stylesheet" href="../static/Menu/menu_style.css">
     <script src="../static/Menu/menu_script.js" defer></script>
     <link rel="stylesheet" href="../static/Recommend/recommend_style.css">
     <script src="../static/Recommend/recommend_script.js" defer></script>
 </head>
 <body>
+    <!-- 로딩 화면 -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-container">
+            <div class="loading-spinner"></div>
+            <div class="loading-text">맛있는 장소를 찾고 있습니다...</div>
+        </div>
+    </div>
+
     <div class="header">
         <div class="hamburger-menu" id="hamburger-menu">&#9776;</div>
         <div class="logo_container">
@@ -39,5 +48,17 @@
         <button onclick="submitSelection()" class="next-button">다음</button>
     </div>
     
+    <script>
+        // 페이지 로드 시 로딩 화면 표시
+        window.addEventListener('load', function() {
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            loadingOverlay.classList.add('active');
+            
+            // 추천 장소가 로드되면 로딩 화면 숨기기
+            setTimeout(() => {
+                loadingOverlay.classList.remove('active');
+            }, 2000); // 2초 후 로딩 화면 숨기기
+        });
+    </script>
 </body>
 </html>
