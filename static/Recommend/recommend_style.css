@@ -1,6 +1,13 @@
 /* 기본 스타일 설정 */
+@font-face {
+    font-family: 'HancomMalangMalang-Regular';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2406-1@1.0/HancomMalangMalang-Regular.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+}
+
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'HancomMalangMalang-Regular', Arial, sans-serif;
     margin: 0;
     padding: 0;
     background-color: #f7f7f7;
@@ -9,51 +16,65 @@ body {
 
 /* 헤더 스타일 */
 .header {
-    position: fixed;
+    position: absolute;
     top: 0;
-    left: 0;
     width: 100%;
-    background-color: white;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    z-index: 100;
+    height: 90px;
+    background-color: #ffffff;
+    color: black;
+    box-sizing: border-box;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 10px 20px;
-    height: 60px;
+    justify-content: center;
+    z-index: 1000;
 }
 
 .logo_container {
-    flex: 1;
-    display: flex;
-    justify-content: center;
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-43.75%);
+    z-index: 1000;
 }
 
 .logo {
-    height: 40px;
-    width: auto;
+    width: 100%;
+    height: auto;
 }
 
 .hamburger-menu {
-    font-size: 24px;
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 55px;
+    height: 55px;
+    background-color: #F0A202;
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5em;
     cursor: pointer;
-    padding: 10px;
+    text-align: center;
+    line-height: 40px;
+    z-index: 1600;
 }
 
 /* 사이드바 스타일 */
 .sidebar {
     position: fixed;
-    top: 60px;
+    top: -70px;
     left: -250px;
     width: 250px;
-    height: calc(100vh - 60px);
-    background-color: white;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-    transition: left 0.3s ease;
-    z-index: 99;
+    height: 150%;
+    background-color: #F0A202;
+    transition: left 0.3s ease-in-out;
+    padding-top: 60px;
+    z-index: 3000;
 }
 
-.sidebar.active {
+.sidebar.show {
     left: 0;
 }
 
@@ -64,66 +85,78 @@ body {
 }
 
 .nav-item {
-    padding: 15px 20px;
-    border-bottom: 1px solid #eee;
+    margin: 20px 0;
+    text-align: center;
 }
 
 .nav-link {
-    color: #333;
+    color: #fff;
     text-decoration: none;
-    font-size: 16px;
+    font-size: 1.2em;
 }
 
 .nav-link:hover {
-    color: #202C59;
+    text-decoration: underline;
 }
 
+/* 컨테이너 스타일 */
 .container {
+    width: 100%;
+    max-width: 800px;
+    margin: 120px auto 0;
     padding: 20px;
-    margin-top: 80px; /* 헤더 높이 + 여유 공간 */
 }
+
+/* 카드 스타일 */
 .card {
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin-bottom: 15px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
     overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.3s ease;
 }
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
 .card img {
     width: 100%;
-    height: 180px;
+    height: 200px;
     object-fit: cover;
 }
+
 .card-content {
     padding: 15px;
 }
+
 .card-title {
+    margin: 0;
     font-size: 1.2em;
     color: #333;
-    margin-bottom: 5px;
 }
-.card-info {
-    display: flex;
-    justify-content: space-between;
-    color: #777;
-    font-size: 0.9em;
-    margin-bottom: 5px;
-}
+
 .card-address {
+    margin: 5px 0 0;
+    color: #666;
     font-size: 0.9em;
-    color: #555;
-    margin-bottom: 10px;
 }
-.selected {
-    border: 2px solid #F0A202;
+
+/* 선택된 카드 스타일 */
+.card.selected {
+    border: 2px solid #ffcc00;
 }
+
+/* 다음 버튼 스타일 */
 .next-button {
     position: fixed;
     bottom: 20px;
     left: 50%;
     transform: translateX(-50%);
-    width: 80%; /* 버튼 너비를 전체 너비의 80%로 설정 */
-    padding: 15px; /* 버튼 높이 조정 */
+    width: 80%;
+    padding: 15px;
     background-color: #202C59;
     color: white;
     border: none;
@@ -131,12 +164,56 @@ body {
     cursor: pointer;
     font-size: 1.2em;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-    z-index: 1000; /* 버튼을 상단에 고정하여 다른 요소 위에 표시 */
+    z-index: 1000;
     text-align: center;
 }
+
 .next-button:hover {
     background-color: #202C59;
 }
+
+/* 로딩 화면 스타일 */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.9);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.loading-overlay.active {
+    display: flex;
+}
+
+.loading-container {
+    text-align: center;
+}
+
+.loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid #ffcc00;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 20px;
+}
+
+.loading-text {
+    color: #333;
+    font-size: 18px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
 .user-preferences {
     background-color: white;
     padding: 15px;
@@ -153,47 +230,4 @@ body {
 .user-preferences li {
     margin: 5px 0;
     color: #333;
-}
-
-/* 로딩 화면 스타일 */
-.loading-overlay {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(255, 255, 255, 0.9);
-    z-index: 1000;
-    justify-content: center;
-    align-items: center;
-}
-
-.loading-container {
-    text-align: center;
-}
-
-.loading-spinner {
-    width: 50px;
-    height: 50px;
-    border: 5px solid #f3f3f3;
-    border-top: 5px solid #202C59;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin: 0 auto 20px;
-}
-
-.loading-text {
-    font-size: 18px;
-    color: #333;
-    margin-top: 10px;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-.loading-overlay.active {
-    display: flex;
 }

@@ -1,12 +1,202 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko">
     <head>
-        <meta charset="utf-8">
-        <title>Login</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>로그인</title>
         <link rel="stylesheet" href="../static/basic.css">
-        <link rel="stylesheet" href="../static/Logout&Login/logout&login.css">
         <link rel="stylesheet" href="../static/Menu/menu_style.css">
-        <script src="../static/Menu/menu_script.js"></script>
+        <link rel="stylesheet" href="../static/Logout&Login/logout&login.css">
+        <script src="/static/Menu/menu_script.js"></script>
+        <style>
+            @font-face {
+                font-family: 'HancomMalangMalang-Regular';
+                src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2406-1@1.0/HancomMalangMalang-Regular.woff2') format('woff2');
+                font-weight: 400;
+                font-style: normal;
+            }
+
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+                font-family: 'HancomMalangMalang-Regular', Arial, sans-serif;
+            }
+
+            body {
+                background-color: #f9f9f9;
+                color: #333;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                padding-bottom: 60px;
+                min-height: 100vh;
+            }
+
+            .header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                width: 100%;
+                height: 100px;
+                padding: 10px 20px;
+                position: fixed;
+                top: 0;
+                left: 0;
+                background-color: #fff;
+                z-index: 1000;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+
+            .logo_container {
+                display: flex;
+                align-items: center;
+                transform: translate(-40%, -10%);
+            }
+
+            .logo {
+                width: 190px;
+                height: 90px;
+                object-fit: contain;
+                display: block;
+                position: relative;
+                right: 15px;
+            }
+
+            .hamburger-menu {
+                font-size: 24px;
+                cursor: pointer;
+                color: #333;
+                margin-top: -15px;
+            }
+
+            .login-container {
+                width: 100%;
+                max-width: 400px;
+                background-color: #ffffff;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                margin: 120px auto 0;
+                border-radius: 20px;
+                padding: 30px;
+            }
+
+            .login-logo {
+                text-align: center;
+                margin-bottom: 30px;
+            }
+
+            .login-logo img {
+                width: 180px;
+                height: auto;
+            }
+
+            .links {
+                display: flex;
+                justify-content: center;
+                gap: 30px;
+                margin-bottom: 30px;
+            }
+
+            .links a {
+                text-decoration: none;
+                color: #555;
+                padding: 5px 0;
+                font-weight: bold;
+                position: relative;
+                transition: color 0.3s;
+            }
+
+            .links a.active {
+                color: #ffcc00;
+            }
+
+            .links a.active::after {
+                content: '';
+                position: absolute;
+                bottom: -2px;
+                left: 0;
+                width: 100%;
+                height: 3px;
+                background-color: #ffcc00;
+            }
+
+            .login-form {
+                display: flex;
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .login-form input[type="text"],
+            .login-form input[type="password"] {
+                width: 100%;
+                height: 50px;
+                border: 1px solid #ddd;
+                padding: 0 15px;
+                border-radius: 5px;
+                font-size: 16px;
+                transition: border-color 0.3s;
+            }
+
+            .login-form input[type="text"]:focus,
+            .login-form input[type="password"]:focus {
+                border-color: #ffcc00;
+                outline: none;
+            }
+
+            .login-form input[type="submit"] {
+                width: 100%;
+                height: 50px;
+                background-color: #ffcc00;
+                border: none;
+                border-radius: 5px;
+                color: #333;
+                font-size: 16px;
+                font-weight: bold;
+                cursor: pointer;
+                transition: background-color 0.3s;
+            }
+
+            .login-form input[type="submit"]:hover {
+                background-color: #ffb700;
+            }
+
+            .msg {
+                color: #dc3545;
+                text-align: center;
+                margin: 10px 0;
+                font-size: 14px;
+            }
+
+            .bottom_nav {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                background-color: #ffffff;
+                display: flex;
+                justify-content: space-around;
+                padding: 10px 0;
+                box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+            }
+
+            .nav_item {
+                text-decoration: none;
+                color: #333;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 5px;
+            }
+
+            .nav_icon {
+                font-size: 24px;
+            }
+
+            .nav_item p {
+                font-size: 12px;
+                margin: 0;
+            }
+        </style>
     </head>
     <body>
         <header class="header">
@@ -14,49 +204,28 @@
                 &#9776;
             </div>
             <div class="logo_container">
-                <img src="/picture/logo/logo.png" alt="logo" class="logo" />
+                <img src="../static/logo.png" alt="logo" class="logo" />
             </div>
         </header>
         <nav class="sidebar" id="sidebar">
             <ul class="sidebar-nav">
                 <li class="nav-item"><a href="/../../../" class="nav-link">홈</a></li>
-                <li class="nav-item"><a href="#" class="nav-link">설정</a></li>
             </ul>
         </nav>
-        <div class="login">
-            <h1>
-                <img
-                    src="https://i.namu.wiki/i/Bge3xnYd4kRe_IKbm2uqxlhQJij2SngwNssjpjaOyOqoRhQlNwLrR2ZiK-JWJ2b99RGcSxDaZ2UCI7fiv4IDDQ.webp"
-                    alt="Login Image"
-                    style="width: 30%; ">
-            </h1>
+        <div class="login-container">
+            <div class="login-logo">
+                <img src="https://i.namu.wiki/i/Bge3xnYd4kRe_IKbm2uqxlhQJij2SngwNssjpjaOyOqoRhQlNwLrR2ZiK-JWJ2b99RGcSxDaZ2UCI7fiv4IDDQ.webp" alt="Login Image">
+            </div>
             <div class="links">
                 <a href="{{ url_for('login') }}" class="active">Login</a>
                 <a href="{{ url_for('register') }}">Register</a>
             </div>
-            <form action="{{ url_for('login') }}" method="post">
-                <label for="username">
-                    <i class="fas fa-user"></i>
-                </label>
-                <input
-                    type="text"
-                    name="username"
-                    placeholder="Username"
-                    id="username"
-                    required="required">
-                <label for="password">
-                    <i class="fas fa-lock"></i>
-                </label>
-                <input
-                    type="password"
-                    name="password"
-                    placeholder="Password"
-                    id="password"
-                    required="required">
+            <form action="{{ url_for('login') }}" method="post" class="login-form">
+                <input type="text" name="username" placeholder="Username" id="username" required>
+                <input type="password" name="password" placeholder="Password" id="password" required>
                 <div class="msg">{{ msg }}</div>
                 <input type="submit" value="Login">
             </form>
         </div>
     </body>
-
 </html>

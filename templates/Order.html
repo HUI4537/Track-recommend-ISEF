@@ -1,27 +1,43 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Recommended Places</title>
+    <link rel="stylesheet" href="../static/basic.css">
     <link rel="stylesheet" href="../static/Menu/menu_style.css">
     <script src="../static/Menu/menu_script.js" defer></script>
     <link rel="stylesheet" href="../static/Order/order_style.css">
     <script src="../static/Order/order_script.js" defer></script>
 </head>
 <body>
-    <div class="header">
-        <div class="hamburger-menu" id="hamburger-menu">&#9776;</div>
+    <!-- 헤더 -->
+    <header class="header">
+        <!-- 햄버거 메뉴 -->
+        <div class="hamburger-menu" id="hamburger-menu">
+            &#9776;
+        </div>
+        <!-- 로고 -->
         <div class="logo_container">
             <img src="../static/logo.png" alt="logo" class="logo" />
         </div>
-        <nav class="sidebar" id="sidebar">
-            <ul class="sidebar-nav">
-                <li class="nav-item"><a href="../" class="nav-link">홈</a></li>
-                <li class="nav-item"><a href="#" class="nav-link">설정</a></li>
-            </ul>
-        </nav>
-    </div>  
+    </header>
+
+    <!-- 사이드바 -->
+    <nav class="sidebar" id="sidebar">
+        <ul class="sidebar-nav">
+            <li class="nav-item"><a href="/../../../" class="nav-link">홈</a></li>
+            <li class="nav-item"><a href="{{ url_for('official_survey') }}" class="nav-link">Track Select</a></li>
+            <li class="nav-item"><a href="{{ url_for('index') }}" class="nav-link">Track Share</a></li>
+            <li class="nav-item"><a href="{{ url_for('Journey') }}" class="nav-link">Travel Start!</a></li>
+            {% if session['loggedin'] %}
+            <li class="nav-item"><a href="{{ url_for('profile') }}" class="nav-link">Mypage</a></li>
+            {% else %}
+            <li class="nav-item"><a href="{{ url_for('login') }}" class="nav-link">Login</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+
     <p></p>
     <h1>Reorder Places</h1>
     <div class="recommendation-section">
@@ -34,7 +50,5 @@
         {% endfor %}
     </div>
     <button id="save-button">Save</button>
-
-   
 </body>
 </html>
