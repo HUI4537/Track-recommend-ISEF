@@ -69,6 +69,10 @@ def main():
 def gomain():
     return render_template("Main.html")
 
+@app.route("/Test")
+def test():
+    return render_template("Test.html")
+
 @app.route("/api/data")
 def api_data():
     data = load_data()

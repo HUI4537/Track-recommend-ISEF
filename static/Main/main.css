@@ -181,7 +181,7 @@ body {
 
 
 body > *:not(.header) {
-    margin-top: 70px; 
+    margin-top: 0px; 
 }
 
 /* 홈 버튼 스타일 */
