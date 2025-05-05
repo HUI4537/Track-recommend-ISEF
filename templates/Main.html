@@ -4,16 +4,414 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>해커톤</title>
+  <title>시끌시끌</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚲</text></svg>">
   <link rel="stylesheet" href="../static/basic.css">
   <link rel="stylesheet" href="../static/Menu/menu_style.css">
   <link rel="stylesheet" href="../static/Main/main.css">
+  
   <script src="/static/Menu/menu_script.js"></script>
-  <script src="/static/Main/main.js"></script>
+  <script src="/static/Test/Test.js"></script>
+  <style>
+    @font-face {
+      font-family: 'HancomMalangMalang-Regular';
+      src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2406-1@1.0/HancomMalangMalang-Regular.woff2') format('woff2');
+      font-weight: 400;
+      font-style: normal;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'HancomMalangMalang-Regular', Arial, sans-serif;
+    }
+
+    body {
+      background-color: #f9f9f9;
+      color: #333;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-bottom: 60px;
+    }
+
+    /* 히어로 섹션 스타일 */
+    .hero {
+      position: relative;
+      height: 100vh;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .hero-image {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: -1;
+    transform: translateY(0);
+    will-change: transform;
+  }
+
+  .hero-image-inner {
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    opacity: 1;
+    transition: opacity 0.6s ease-in-out, transform 0.6s ease-in-out;
+  }
+
+  .hero-image-inner.fade-out {
+    opacity: 0;
+    transform: scale(1.05);
+  }
+
+  .hero-image-inner.fade-in {
+    opacity: 1;
+    transform: scale(1);
+  }
+    .hero-content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      color: white;
+      z-index: 1;
+      width: 90%;
+    }
+
+    .hero-content h1 {
+      font-size: 4rem;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+      margin-bottom: 1rem;
+    }
+
+    .hero-content p {
+      font-size: 1.5rem;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* 스크롤 표시기 */
+    .scroll-indicator {
+      position: absolute;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      color: white;
+      font-size: 1rem;
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0) translateX(-50%);
+      }
+      40% {
+        transform: translateY(-20px) translateX(-50%);
+      }
+      60% {
+        transform: translateY(-10px) translateX(-50%);
+      }
+    }
+
+    /* 구분 섹션 바 */
+    .section-divider {
+      position: relative;
+      width: 100%;
+      background-color: #fff;
+      padding: 20px 0;
+      margin-top: 100vh;
+      z-index: 10;
+      box-shadow: 0 -10px 20px rgba(0, 0, 0, 0.1);
+      border-radius: 30px 30px 0 0;
+      text-align: center;
+    }
+
+    /* 한국 탐방 섹션 */
+    .korea-divider {
+      margin-top: 0;
+      padding: 2px 0;
+      border-radius: 0;
+      border-top: 1px solid #eee;
+    }
+
+    .section-title {
+      font-size: 1.8rem;
+      color: #333;
+      margin-bottom: 5px;
+    }
+
+    /* 대전 소식 섹션 */
+    .news-section {
+      width: 100%;
+      max-width: 1200px;
+      padding: 20px 10px;
+      margin-bottom: 20px;
+    }
+
+    /* 자동 슬라이드 이미지 */
+    .auto-slider {
+      width: 100%;
+      height: 220px;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .slider-container {
+      display: flex;
+      transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      height: 100%;
+    }
+
+    .slide {
+      min-width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      background-size: cover;
+      background-position: center;
+    }
+
+    .slide-content {
+      padding: 15px;
+      background-color: #fff;
+    }
+
+    .slide-title {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #333;
+    }
+
+    /* 스와이프 뉴스 카드 */
+    .news-cards-title {
+      font-size: 1.3rem;
+      color: #333;
+      margin-bottom: 15px;
+    }
+
+    .news-cards {
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      display: grid;
+      grid-auto-flow: column;
+      grid-auto-columns: calc(100% / 3);
+      gap: 15px;
+      padding: 5px;
+      scroll-snap-type: x mandatory;
+    }
+
+    .news-cards::-webkit-scrollbar {
+      display: none;
+    }
+
+    .news-card {
+      scroll-snap-align: start;
+      background-color: #fff;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
+                  box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .news-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    }
+
+    .news-card-image {
+      width: 100%;
+      height: 120px;
+      background-size: cover;
+      background-position: center;
+    }
+
+    .news-card-content {
+      padding: 12px;
+    }
+
+    .news-card-title {
+      font-size: 0.9rem;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 5px;
+      display: -webkit-box;
+
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .news-card-date {
+      font-size: 0.75rem;
+      color: #888;
+    }
+
+    /* 검색창 스타일 수정 */
+    .search_container {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      max-width: 100%;
+      margin: 0;
+      padding: 2px 5px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      background-color: #fff;
+      position: fixed;
+      z-index: 1000;
+    }
+
+    .search_input {
+      flex: 1;
+      padding: 6px 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px 0 0 5px;
+      font-size: 13px;
+    }
+
+    .search_btn {
+      padding: 6px 10px;
+      background-color: #eee;
+      border: 1px solid #ddd;
+      border-left: none;
+      border-radius: 0 5px 5px 0;
+      cursor: pointer;
+      font-size: 13px;
+      color: #666;
+    }
+
+    /* 한국 탐방 섹션 */
+    .korea-tour-section {
+      width: 100%;
+      max-width: 1200px;
+      padding: 0;
+      margin-top: 0;
+    }
+
+    /* 카드 섹션 스타일 수정 */
+    .cards_container {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px; 
+      width: 100%;
+      max-width: 420px;
+      padding: 5px 10px;
+      transition: opacity 0.6s ease, transform 0.6s ease;
+      margin: 0 auto;
+    }
+
+    .card {
+      background-color: #fff;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
+                  box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: pointer;
+    }
+
+    .card:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    }
+
+    .placeholder_image {
+      width: 100%;
+      height: 130px; 
+      background-size: cover;
+      background-position: center;
+    }
+
+    .card_content {
+      padding: 8px 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .title_row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+    }
+
+    .blog_title {
+      font-size: 14px;
+      font-weight: bold;
+      color: #44443f;
+    }
+
+    .site_name {
+      font-size: 12px;
+      color: #888;
+    }
+
+    /* 스와이프 컨트롤 */
+    .swipe-controls {
+      display: flex;
+      justify-content: center;
+      margin-top: 15px;
+    }
+
+    .swipe-btn {
+      background-color: #ffcc00;
+      color: #333;
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      font-size: 1.2rem;
+      margin: 0 10px;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .swipe-btn:hover {
+      background-color: #ffb700;
+    }
+
+    /* 반응형 스타일 */
+    @media (max-width: 768px) {
+      .hero-content h1 {
+        font-size: 2.5rem;
+      }
+      
+      .hero-content p {
+        font-size: 1rem;
+      }
+
+      .news-cards {
+        grid-auto-columns: 85%;
+      }
+
+      .section-title {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
 </head>
 
 <body>
-
   <!-- 헤더 -->
   <header class="header">
     <!-- 로고 -->
@@ -25,28 +423,119 @@
     <div class="hamburger-menu" id="hamburger-menu">
       &#9776;
     </div>
-
   </header>
 
   <!-- 사이드바 -->
   <nav class="sidebar" id="sidebar">
     <ul class="sidebar-nav">
       <li class="nav-item"><a href="/../../../" class="nav-link">홈</a></li>
-      <li class="nav-item"><a href="{{ url_for('official_survey') }}" class="nav-link">Track Select</a></li>
-      <li class="nav-item"><a href="{{ url_for('index') }}" class="nav-link">Track Share</a></li>
-      <li class="nav-item"><a href="{{ url_for('Journey') }}" class="nav-link">Travel Start!</a></li>
+      <li class="nav-item"><a href="/official_survey" class="nav-link">Track Select</a></li>
+      <li class="nav-item"><a href="/index" class="nav-link">Track Share</a></li>
+      <li class="nav-item"><a href="/Journey" class="nav-link">Travel Start!</a></li>
       {% if session['loggedin'] %}
       <li class="nav-item"><a href="{{ url_for('profile') }}" class="nav-link">Mypage</a></li>
+      <li class="nav-item"><a href="{{ url_for('logout') }}" class="nav-link">Logout</a></li>
       {% else %}
       <li class="nav-item"><a href="{{ url_for('login') }}" class="nav-link">Login</a></li>
       {% endif %}
     </ul>
   </nav>
 
-  <!-- 검색창 -->
-  <div class="search_container">
-    <input type="text" class="search_input" placeholder="Search anything!">
-    <button class="search_btn">🔍︎</button>
+  <!-- 히어로 섹션 -->
+  <section class="hero">
+    <div class="hero-image"></div>
+    <div class="hero-content">
+      <h1>Daejeon</h1>
+      <p>Center of Korea, A City of Science and Nature</p>
+    </div>
+    <div class="scroll-indicator">
+      <p>Scroll Down</p>
+      <span>↓</span>
+    </div>
+  </section>
+
+  <!-- 구분 섹션 바 -->
+  <div class="section-divider">
+    <h2 class="section-title">Daejeon News</h2>
+  </div>
+
+  <!-- 대전 소식 섹션 -->
+  <section class="news-section">
+    <!-- 자동 슬라이드 이미지 -->
+    <div class="auto-slider">
+      <div class="slider-container">
+        <div class="slide">
+          <div style="background-image: url('/picture/대덕연구단지.jpg'); width: 100%; height: 170px; background-size: cover;"></div>
+          <div class="slide-content">
+            <h3 class="slide-title">New Technology Development at Daedeok Research Complex</h3>
+          </div>
+        </div>
+        <div class="slide">
+          <div style="background-image: url('/picture/성심당.jpg'); width: 100%; height: 170px; background-size: 100% 100%"></div>
+          
+          <div class="slide-content">
+            <h3 class="slide-title">Sungsimdang Bakery Launches Special Menu</h3>
+          </div>
+        </div>
+        <div class="slide">
+          <div style="background-image: url('/picture/한밭수목원.png'); width: 100%; height: 170px; background-size: cover;"></div>
+          <div class="slide-content"> 
+            <h3 class="slide-title">Hanbat Arboretum Spring Festival</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 뉴스 카드 섹션 -->
+    <h3 class="news-cards-title">Latest News</h3>
+    <div class="news-cards">
+      <div class="news-card">
+        <div class="news-card-image" style="background-image: url('/picture/대전시립미술관.jpg')"></div>
+        <div class="news-card-content">
+          <h4 class="news-card-title">Daejeon Museum of Art Special Exhibition: Masters of Korean Modern Art</h4>
+          <p class="news-card-date">2023.04.15</p>
+        </div>
+      </div>
+      <div class="news-card">
+        <div class="news-card-image" style="background-image: url('/picture/엑스포과학공원.jpg')"></div>
+        <div class="news-card-content">
+          <h4 class="news-card-title">Expo Science Park Opens New Tech Experience Zone</h4>
+          <p class="news-card-date">2023.04.10</p>
+        </div>
+      </div>
+      <div class="news-card">
+        <div class="news-card-image" style="background-image: url('/picture/계족산황톳길.jpg')"></div>
+        <div class="news-card-content">
+          <h4 class="news-card-title">Gyejoksan Red Clay Path Walking Festival Coming Soon</h4>
+          <p class="news-card-date">2023.04.05</p>
+        </div>
+      </div>
+      <div class="news-card">
+        <div class="news-card-image" style="background-image: url('/picture/대전스마트시티.jpg')"></div>
+        <div class="news-card-content">
+          <h4 class="news-card-title">Daejeon Smart City Project to Enhance Citizen Convenience</h4>
+          <p class="news-card-date">2023.03.28</p>
+        </div>
+      </div>
+      <div class="news-card">
+        <div class="news-card-image" style="background-image: url('/picture/과학축제.jpg')"></div>
+        <div class="news-card-content">
+          <h4 class="news-card-title">Daejeon International Science Festival Announcement</h4>
+          <p class="news-card-date">2023.03.20</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 스와이프 컨트롤 -->
+    <div class="swipe-controls">
+      <button class="swipe-btn prev-btn">◀</button>
+      <button class="swipe-btn next-btn">▶</button>
+    </div>
+  </section>
+
+  <!-- 한국 탐방 섹션 -->
+  <div class="section-divider korea-divider">
+    <h2 class="section-title">Explore Korea</h2>
   </div>
 
   <!-- 카드 섹션 -->
@@ -110,17 +599,17 @@
   <!-- 지역 정보 표시 영역 -->
   <div id="displayArea" style="display: none;"></div>
 
-  <!-- 네비게이션 바(#구역에 맞는) -->
+  <!-- 네비게이션 바 -->
   <nav class="bottom_nav">
-    <a href="{{ url_for('gomain')}}" class="nav_item home_button">
+    <a href="/Main" class="nav_item home_button">
       <span class="nav_icon">🏠</span>
       <p>HOME</p>
     </a>
-    <a href="{{ url_for ('Or') }}" class="nav_item">
+    <a href="/Or" class="nav_item">
       <span class="nav_icon">🗺️</span>
       <p>Track Select</p>
     </a>
-    <a href="{{ url_for('index') }}" class="nav_item">
+    <a href="/index" class="nav_item">
       <span class="nav_icon">🚀</span>
       <p>Track Share</p>
     </a>
@@ -129,6 +618,8 @@
       <p>Travel Start!</p>
     </a>
   </nav>
+
+  
 </body>
 
 </html>

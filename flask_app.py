@@ -11,6 +11,7 @@ import hashlib
 import os
 import json
 import re
+from datetime import datetime, timedelta
 #경로 가져오기
 from place_recommender import PlaceRecommender
 from route_finder import get_route, get_waypoints
@@ -27,7 +28,10 @@ BULLETIN_BOARD_UPLOAD_FOLDER = os.path.join(BASE_DIR, 'static', 'uploads')
 app = Flask(__name__)
 CORS(app)  # CORS 설정 추가
 
+# 세션 설정
 app.secret_key = app.secret_key or 'default_secret_key'
+app.config['UPLOAD_FOLDER'] = BULLETIN_BOARD_UPLOAD_FOLDER
+
 app.config['UPLOAD_FOLDER'] = BULLETIN_BOARD_UPLOAD_FOLDER
 
 import sqlite3  # SQLite 모듈 추가
@@ -69,6 +73,10 @@ def main():
 def gomain():
     return render_template("Main.html")
 
+@app.route("/Test")
+def test():
+    return render_template("Test.html")
+
 @app.route("/api/data")
 def api_data():
     data = load_data()
@@ -100,7 +108,7 @@ def login():
             session['loggedin'] = True
             session['id'] = account['id']
             session['username'] = account['username']
-            return redirect(url_for('home'))
+            return redirect(url_for('gomain'))
         else:
             msg = 'Incorrect username/password!'
     return render_template('login.html', msg=msg)
@@ -810,6 +818,10 @@ def delete_track(track_id):
         return jsonify({'success': False, 'error': str(e)})
     finally:
         conn.close()
+
+@app.before_request
+def make_session_permanent():
+    session.permanent = True
 
 if __name__ == "__main__":
     app.run(debug=True)

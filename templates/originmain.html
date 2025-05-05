@@ -1,0 +1,134 @@
+    <!DOCTYPE html>
+    <html lang="ko">
+
+    <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>해커톤</title>
+    <link rel="stylesheet" href="../static/basic.css">
+    <link rel="stylesheet" href="../static/Menu/menu_style.css">
+    <link rel="stylesheet" href="../static/Main/main.css">
+    <script src="/static/Menu/menu_script.js"></script>
+    <script src="/static/Main/main.js"></script>
+    </head>
+
+    <body>
+
+    <!-- 헤더 -->
+    <header class="header">
+        <!-- 로고 -->
+        <div class="logo_container">
+        <img src="../picture/logo/logo.png" alt="logo" class="logo" />
+        </div>
+
+        <!-- 햄버거 메뉴 -->
+        <div class="hamburger-menu" id="hamburger-menu">
+        &#9776;
+        </div>
+
+    </header>
+
+    <!-- 사이드바 -->
+    <nav class="sidebar" id="sidebar">
+        <ul class="sidebar-nav">
+        <li class="nav-item"><a href="/../../../" class="nav-link">홈</a></li>
+        <li class="nav-item"><a href="{{ url_for('official_survey') }}" class="nav-link">Track Select</a></li>
+        <li class="nav-item"><a href="{{ url_for('index') }}" class="nav-link">Track Share</a></li>
+        <li class="nav-item"><a href="{{ url_for('Journey') }}" class="nav-link">Travel Start!</a></li>
+        {% if session['loggedin'] %}
+        <li class="nav-item"><a href="{{ url_for('profile') }}" class="nav-link">Mypage</a></li>
+        {% else %}
+        <li class="nav-item"><a href="{{ url_for('login') }}" class="nav-link">Login</a></li>
+        {% endif %}
+        </ul>
+    </nav>
+
+    <!-- 검색창 -->
+    <div class="search_container">
+        <input type="text" class="search_input" placeholder="Search anything!">
+        <button class="search_btn">🔍︎</button>
+    </div>
+
+    <!-- 카드 섹션 -->
+    <section class="cards_container">
+        <div class="card" data-region="경주">
+        <div class="placeholder_image" style="background-image: url('/picture/경주.jpg');"></div>
+        <div class="card_content">
+            <div class="title_row">
+            <h3 class="blog_title">Gyeongju</h3>
+            <p class="site_name">경주</p>
+            </div>
+        </div>
+        </div>
+        <div class="card" data-region="대전">
+        <div class="placeholder_image" style="background-image: url('/picture/대전.jpg');"></div>
+        <div class="card_content">
+            <div class="title_row">
+            <h3 class="blog_title">Daejeon</h3>
+            <p class="site_name">대전</p>
+            </div>
+        </div>
+        </div>
+        <div class="card" data-region="부산">
+        <div class="placeholder_image" style="background-image: url('/picture/부산.jpg');"></div>
+        <div class="card_content">
+            <div class="title_row">
+            <h3 class="blog_title">Busan</h3>
+            <p class="site_name">부산</p>
+            </div>
+        </div>
+        </div>
+        <div class="card" data-region="서울">
+        <div class="placeholder_image" style="background-image: url('/picture/서울.jpg');"></div>
+        <div class="card_content">
+            <div class="title_row">
+            <h3 class="blog_title">Seoul</h3>
+            <p class="site_name">서울</p>
+            </div>
+        </div>
+        </div>
+        <div class="card" data-region="인천">
+        <div class="placeholder_image" style="background-image: url('/picture/인천.jpg');"></div>
+        <div class="card_content">
+            <div class="title_row">
+            <h3 class="blog_title">Incheon</h3>
+            <p class="site_name">인천</p>
+            </div>
+        </div>
+        </div>
+        <div class="card" data-region="제주">
+        <div class="placeholder_image" style="background-image: url('/picture/제주.jpg');"></div>
+        <div class="card_content">
+            <div class="title_row">
+            <h3 class="blog_title">Jeju</h3>
+            <p class="site_name">제주</p>
+            </div>
+        </div>
+        </div>
+    </section>
+
+    <!-- 지역 정보 표시 영역 -->
+    <div id="displayArea" style="display: none;"></div>
+
+    <!-- 네비게이션 바(#구역에 맞는) -->
+    <nav class="bottom_nav">
+        <a href="{{ url_for('gomain')}}" class="nav_item home_button">
+        <span class="nav_icon">🏠</span>
+        <p>HOME</p>
+        </a>
+        <a href="{{ url_for ('Or') }}" class="nav_item">
+        <span class="nav_icon">🗺️</span>
+        <p>Track Select</p>
+        </a>
+        <a href="{{ url_for('index') }}" class="nav_item">
+        <span class="nav_icon">🚀</span>
+        <p>Track Share</p>
+        </a>
+        <a href="../Journey" class="nav_item">
+        <span class="nav_icon">🚲</span>
+        <p>Travel Start!</p>
+        </a>
+    </nav>
+    </body>
+
+    </html>
