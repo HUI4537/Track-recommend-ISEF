@@ -165,8 +165,20 @@ document.addEventListener('DOMContentLoaded', function () {
 // 캘린더 초기화
 function initCalendar() {
     const calendar = document.getElementById('calendar');
-    const daysInNovember = 30;
-    const firstDay = new Date(2023, 10, 1).getDay();
+    const daysInMay = 31;  // 5월은 31일
+    const firstDay = new Date(2025, 4, 1).getDay();  // 2025년 5월 1일의 요일
+
+    // 달력 제목 설정
+    document.getElementById('calendar-title').textContent = 'May 2025';
+
+    // 요일 헤더 추가
+    const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    weekdays.forEach(day => {
+        const headerDay = document.createElement('div');
+        headerDay.className = 'calendar-day header';
+        headerDay.textContent = day;
+        calendar.appendChild(headerDay);
+    });
 
     // 빈 칸 추가
     for (let i = 0; i < firstDay; i++) {
@@ -176,11 +188,11 @@ function initCalendar() {
     }
 
     // 날짜 추가
-    for (let i = 1; i <= daysInNovember; i++) {
+    for (let i = 1; i <= daysInMay; i++) {
         const dayElement = document.createElement('div');
         dayElement.className = 'calendar-day';
         dayElement.textContent = i;
-        dayElement.dataset.date = `2023-11-${String(i).padStart(2, '0')}`;
+        dayElement.dataset.date = `2025-05-${String(i).padStart(2, '0')}`;
         calendar.appendChild(dayElement);
     }
 }

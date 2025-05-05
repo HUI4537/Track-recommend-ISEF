@@ -1,45 +1,41 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 
 <head>
 	<meta charset="utf-8">
-	<title>Register</title>
-	<link rel="stylesheet" href="../static/Logout&Login/logout&login.css">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>시끌시끌 - 회원가입</title>
+	<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚲</text></svg>">
+	<link rel="stylesheet" href="../static/basic.css">
 	<link rel="stylesheet" href="../static/Menu/menu_style.css">
-	<script src="../static/Menu/menu_script.js"></script>
+	<link rel="stylesheet" href="../static/Logout&Login/logout&login.css">
+	<script src="/static/Menu/menu_script.js"></script>
 </head>
-	<div class="header">
+<body>
+	<header class="header">
 		<div class="hamburger-menu" id="hamburger-menu">&#9776;</div>
 		<div class="logo_container">
 			<img src="/picture/logo/logo.png" alt="logo" class="logo" />
 		</div>
-		<nav class="sidebar" id="sidebar">
-			<ul class="sidebar-nav">
-				<li class="nav-item"><a href="../" class="nav-link">홈</a></li>
-				<li class="nav-item"><a href="#" class="nav-link">설정</a></li>
-			</ul>
-		</nav>
-	</div>
-	<div class="register">
-		<h1><img src="https://i.namu.wiki/i/Bge3xnYd4kRe_IKbm2uqxlhQJij2SngwNssjpjaOyOqoRhQlNwLrR2ZiK-JWJ2b99RGcSxDaZ2UCI7fiv4IDDQ.webp"
-				alt="Login Image" style="width: 300px; height: 300px; ">
-		</h1>
+	</header>
+	<nav class="sidebar" id="sidebar">
+		<ul class="sidebar-nav">
+			<li class="nav-item"><a href="../" class="nav-link">홈</a></li>
+			<li class="nav-item"><a href="#" class="nav-link">설정</a></li>
+		</ul>
+	</nav>
+	<div class="login-container">
+		<div class="login-logo">
+			<img src="https://i.namu.wiki/i/Bge3xnYd4kRe_IKbm2uqxlhQJij2SngwNssjpjaOyOqoRhQlNwLrR2ZiK-JWJ2b99RGcSxDaZ2UCI7fiv4IDDQ.webp"
+				alt="Login Image">
+		</div>
 		<div class="links">
 			<a href="{{ url_for('login') }}">Login</a>
 			<a href="{{ url_for('register') }}" class="active">Register</a>
 		</div>
-		<form action="{{ url_for('register') }}" method="post" autocomplete="off">
-			<label for="username">
-				<i class="fas fa-user"></i>
-			</label>
+		<form action="{{ url_for('register') }}" method="post" autocomplete="off" class="login-form">
 			<input type="text" name="username" placeholder="Username" id="username" required>
-			<label for="password">
-				<i class="fas fa-lock"></i>
-			</label>
 			<input type="password" name="password" placeholder="Password" id="password" required>
-			<label for="email">
-				<i class="fas fa-envelope"></i>
-			</label>
 			<input type="email" name="email" placeholder="Email" id="email" required>
 			<div class="msg">{{ msg }}</div>
 			<input type="submit" value="Register">

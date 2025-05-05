@@ -156,7 +156,8 @@ body {
 }
 
 .login-form input[type="text"],
-.login-form input[type="password"] {
+.login-form input[type="password"],
+.login-form input[type="email"] {
     width: 100%;
     height: 50px;
     border: 1px solid #ddd;
@@ -167,7 +168,8 @@ body {
 }
 
 .login-form input[type="text"]:focus,
-.login-form input[type="password"]:focus {
+.login-form input[type="password"]:focus,
+.login-form input[type="email"]:focus {
     border-color: #ffcc00;
     outline: none;
 }
