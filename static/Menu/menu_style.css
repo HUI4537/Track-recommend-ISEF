@@ -74,7 +74,7 @@
     
 }
 .header {
-    position: absolute;
+    /* position: absolute; */
     top: 0;
     width: 100%;
     height: 90px; /* 원하는 높이로 조정 */
