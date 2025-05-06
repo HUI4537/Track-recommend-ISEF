@@ -89,19 +89,33 @@ function initMap() {
 
     // 2) 각 장소에 작은 옅은 파란색 원형 마커 찍기
     places.forEach(place => {
+        const customIcon = {
+            path: google.maps.SymbolPath.CIRCLE,
+            scale: 7,               // 이전보다 크게
+            fillColor: "#3fc1eb",    // 연한 파랑
+            fillOpacity: 1.0,        // 완전 불투명
+            strokeColor: "#FFFFFF",
+            strokeOpacity: 1.0,      // 테두리 불투명
+            strokeWeight: 2,
+            anchor: new google.maps.Point(0, 0) // center at LatLng
+        };
+    
         const marker = new google.maps.Marker({
-        position: { lat: parseFloat(place.lat), lng: parseFloat(place.lng) },
+        position: { lat: place.lat, lng: place.lng },
         map,
         title: place.name,
-        icon: {
-            path: google.maps.SymbolPath.CIRCLE,
-            scale: 6,               // 작게
-            fillColor: "#ADD8E6",   // 옅은 파란색
-            fillOpacity: 0.8,
-            strokeColor: "#FFFFFF",
-            strokeWeight: 1
-        }
+        icon: customIcon
         });
+    
+        // 디버깅: 실제 아이콘 프로퍼티 확인
+        console.log("Marker icon:", marker.getIcon());
+        
+        // 아래는 기본 마커
+        // const marker = new google.maps.Marker({
+        //     position: { lat: place.lat, lng: place.lng },
+        //     map,
+        //     title: place.name
+        //     });   
 
         // 3) 클릭 시 InfoWindow에 이미지·타입·주소 표시
         marker.addListener('click', () => {
