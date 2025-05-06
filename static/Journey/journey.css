@@ -56,3 +56,157 @@ body {
     font-size: 14px;
     color: #666;
 }
+
+
+/* journey.css - InfoWindow 스타일 */
+.info-window-content {
+    width: 180px;
+    font-family: 'HancomMalangMalang-Regular', sans-serif;
+}
+.info-window-content img {
+width: 100%;
+height: 90px;
+object-fit: cover;
+border-radius: 4px;
+margin-bottom: 6px;
+}
+.info-window-content h3 {
+margin: 0;
+font-size: 14px;
+color: #333;
+}
+.info-window-content p {
+margin: 2px 0;
+font-size: 11px;
+color: #666;
+}
+.info-window-content a {
+display: inline-block;
+margin-top: 6px;
+padding: 4px 8px;
+border-radius: 4px;
+background: #4285F4;
+color: #fff;
+text-decoration: none;
+font-size: 11px;
+}
+
+
+/* TTS 토글 버튼 (뷰포트 고정) */
+.tts-toggle-button {
+    position: fixed;
+    bottom: 100px;
+    left: 20px;
+    z-index: 1000;
+    width: 140px;
+    height: 40px;
+    background-color: #666;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+/* 모달 오버레이 */
+.tts-modal {
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(0,0,0,0.5);
+}
+
+/* 모달 콘텐츠 박스 */
+.tts-modal-content {
+    background: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    width: 260px;
+    margin: 100px auto;
+    text-align: center;
+    position: relative;
+}
+
+/* 모달 닫기 버튼 */
+.tts-modal-close {
+    position: absolute;
+    top: 10px; right: 10px;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+/* 활성화 버튼 */
+.tts-activate-button {
+    margin-top: 20px;
+    padding: 8px 16px;
+    background-color: #34A853;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+
+/* (기존 스타일은 그대로 두고 아래만 추가/수정) */
+
+/* 모달 콘텐츠 박스 크기 확대 */
+/* 모달 콘텐츠 박스 확대 */
+.tts-modal-content {
+    background: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    width: 340px;       /* 좀 더 넓게 */
+    margin: 60px auto;
+    text-align: center;
+    position: relative;
+}
+
+/* 라디오 옵션들 */
+.tts-options {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin: 20px 0;
+}
+
+.tts-confirm-button {
+    display: block;
+    margin: 0 auto;
+    padding: 10px 20px;
+    font-size: 14px;
+    background-color: #34A853;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* 버튼 그룹 감싸기 */
+.tts-modal-buttons {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-around;
+}
+
+/* Activate 버튼 (초록) */
+.tts-activate-button {
+    padding: 8px 16px;
+    background-color: #34A853;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* Deactivate 버튼 (빨강) */
+.tts-deactivate-button {
+    padding: 8px 16px;
+    background-color: #d9534f;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}

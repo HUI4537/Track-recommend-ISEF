@@ -19,7 +19,7 @@ import pandas as pd
 from geopy.geocoders import Nominatim
 from geopy.distance import geodesic
 from schedule_maker import tsp_shortest_path, astar_shortest_path
-
+import csv
 # 현재 Python 파일의 디렉터리 기준으로 경로 설정
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 BULLETIN_BOARD_DATABASE = os.path.join(BASE_DIR, 'board.db')
@@ -32,13 +32,66 @@ CORS(app)  # CORS 설정 추가
 app.secret_key = app.secret_key or 'default_secret_key'
 app.config['UPLOAD_FOLDER'] = BULLETIN_BOARD_UPLOAD_FOLDER
 
-app.config['UPLOAD_FOLDER'] = BULLETIN_BOARD_UPLOAD_FOLDER
 
 import sqlite3  # SQLite 모듈 추가
 
 # SQLite 데이터베이스 파일 경로
 LOGIN_DATABASE_FILE = os.path.join(os.path.dirname(__file__), "pythonlogin.db")
 LOGIN_DATA_FILE = os.path.join(app.static_folder, "Main", "data.json")
+
+
+#Restraunt CSV 최초로 불러오기
+CSV_PATH = os.path.join(os.path.dirname(__file__), 'restaurant.csv')
+RESTAURANT_DF = pd.read_csv(CSV_PATH, encoding='utf-8')
+
+
+
+# ------------ TTS CSV 파일 최초 설정 --------------
+# 1) CSV 파일 경로 설정
+CSV_FILES = {
+    'ko': os.path.join(BASE_DIR, 'places.csv'),
+    'en': os.path.join(BASE_DIR, 'places_en.csv'),
+    'ja': os.path.join(BASE_DIR, 'places_ja.csv'),
+}
+
+def load_places(csv_path):
+    # 1) CSV에서 Name,Address,Operation,Type,Explanation,Img 필드만 읽어 리스트에 저장
+    rows = []
+    with open(csv_path, encoding='utf-8', newline='') as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            rows.append({
+                'name':        row.get('Name', '').strip(),
+                'address':     row.get('Address', '').strip(),
+                'operation':   row.get('Operation', '').strip(),
+                'type':        row.get('Type', '').strip(),
+                'explanation': row.get('Explanation', '').strip(),
+                'img':         row.get('Img', '').strip(),
+            })
+
+    # 2) 위경도가 필요하므로, Name 목록만 뽑아 get_waypoints 호출
+    
+    place_names = [info['address'] for info in rows]
+    coords      = get_waypoints(place_names)   # turn4file0
+
+    # 3) rows와 coords를 순서대로 합쳐 최종 places 리스트 생성
+    places = []
+    for info, wp in zip(rows, coords):
+        places.append({
+            **info,
+            'lat': float(wp['latitude']),
+            'lng': float(wp['longitude']),
+        })
+
+    return places
+
+# 서버 시작 시 한 번만 로드
+LOCATIONS = {
+    lang: load_places(path)
+    for lang, path in CSV_FILES.items()
+}
+
+# ------------ TTS CSV 파일 최초 설정 end --------------
 
 def get_logindb_connection():
     """SQLite 데이터베이스 연결 함수."""
@@ -492,8 +545,8 @@ def Recommend():
 
     try:
         # restaurant.csv 파일 로드
-        csv_path = os.path.join(os.path.dirname(__file__), 'restaurant.csv')
-        restaurant_data = pd.read_csv(csv_path)
+        
+        restaurant_data = RESTAURANT_DF
         print(restaurant_data)
     except Exception as e:
         print(f"Error loading CSV file: {e}")
@@ -536,14 +589,81 @@ def Recommend():
             recommender = PlaceRecommender(user_profiles, user_place_matrix)
             recommended_place_ids = recommender.place_recommend(new_user_profile)
 
-            # 추천된 장소 ID를 기반으로 restaurant_data에서 해당 장소 정보 가져오기
-            recommended_places = restaurant_data[restaurant_data.index.isin(recommended_place_ids)].to_dict('records')
-
         except Exception as e:
             print(f"Error in recommendation process: {e}")
             recommended_places = []
 
+        if recommended_place_ids:
+            try:
+                # iloc을 사용해 '행 번호'에 해당하는 레코드만 가져오기
+                df = RESTAURANT_DF
+                recommended_places = df.iloc[recommended_place_ids].to_dict('records')
+            except Exception as e:
+                print(f"Error slicing RESTAURANT_DF with iloc: {e}")
+                recommended_places = []
+
     return render_template('Recommend.html', recommended_places=recommended_places)
+
+
+
+
+#-------------------------------------------------------  
+    # 쿼리 파라미터 추출
+    age_range   = request.args.get('age_range')
+    gender      = request.args.get('gender')
+    nationality = request.args.get('nationality')
+    travel_pref = request.args.get('travel_pref')
+    food_pref   = request.args.get('food_pref')
+
+    recommended_places = []
+
+    # 필수 파라미터 체크
+    if None in (age_range, gender, nationality, travel_pref, food_pref):
+        print("Parameters missing")
+    else:
+        # 샘플 사용자 프로필 & 매트릭스 (기존 코드 그대로)
+        user_profiles = {
+            "user1": {"age_range": "10대", "gender": "여성", "nationality": "한국", "travel_pref": "상큼 발랄한 여름", "food_pref": "밥 요리"},
+            "user2": {"age_range": "20대", "gender": "남성", "nationality": "한국", "travel_pref": "도시 탐방", "food_pref": "면 요리"},
+            "user3": {"age_range": "30대", "gender": "여성", "nationality": "미국", "travel_pref": "문화적 체험", "food_pref": "채식"},
+            "user4": {"age_range": "40대", "gender": "남성", "nationality": "일본", "travel_pref": "자연 속 휴식", "food_pref": "해산물"},
+            "user5": {"age_range": "10대", "gender": "여성", "nationality": "일본", "travel_pref": "활동적인 여행", "food_pref": "분식"},
+        }
+        user_place_matrix = {
+            "user1": {2: 1, 6: 1, 122: 1},
+            "user2": {5: 1, 8: 1, 10: 1},
+            "user3": {2: 1, 4: 1, 15: 1},
+            "user4": {3: 1, 6: 1, 7: 1},
+            "user5": {1: 1, 9: 1, 12: 1},
+        }
+
+        # 새 사용자 프로필 생성
+        new_user_profile = {
+            "age_range":   age_range,
+            "gender":      gender,
+            "nationality": nationality,
+            "travel_pref": travel_pref,
+            "food_pref":   food_pref
+        }
+
+        # 추천 시스템 실행
+        try:
+            recommender = PlaceRecommender(user_profiles, user_place_matrix)
+            recommended_place_ids = recommender.place_recommend(new_user_profile)
+        except Exception as e:
+            print(f"Error in recommendation process: {e}")
+            recommended_place_ids = []
+        # 인덱스 배열로 csv 가져옴
+        df = RESTAURANT_DF.reset_index()
+        # 2) iloc으로 integer IDs에 대응하는 행만 선택
+        try:
+            filtered = df.iloc[recommended_place_ids]
+        except Exception:
+            # 혹시 recommended_place_ids가 문자열 이름 리스트일 경우를 대비한 폴백
+            filtered = df[df['Name'].isin(recommended_place_ids)]
+
+    return render_template('Recommend.html',
+                        recommended_places=recommended_places)
 
 @app.route('/Order')
 def Order():
@@ -596,94 +716,86 @@ def Journey():
     if 'loggedin' not in session:
         return redirect(url_for('login'))
 
-    # URL에서 track_id 파라미터 가져오기
+    # 1) DB에서 track_places 가져오기
     track_id = request.args.get('track_id')
-    
-    # 데이터베이스에서 트랙 정보 가져오기
-    conn = get_logindb_connection()
-    cursor = conn.cursor()
-    
+    conn = get_logindb_connection(); cursor = conn.cursor()
     if track_id:
-        # 특정 트랙 ID로 조회
-        cursor.execute('''
-            SELECT track_places 
-            FROM tracks 
-            WHERE id = ? AND user_id = ?
-        ''', (track_id, session['id']))
+        cursor.execute(
+            'SELECT track_places FROM tracks WHERE id=? AND user_id=?',
+            (track_id, session['id'])
+        )
     else:
-        # track_id가 없으면 가장 최근 트랙 조회
-        cursor.execute('''
-            SELECT track_places 
-            FROM tracks 
-            WHERE user_id = ? 
-            ORDER BY created_at DESC 
-            LIMIT 1
-        ''', (session['id'],))
-    
-    track = cursor.fetchone()
+        cursor.execute(
+            'SELECT track_places FROM tracks WHERE user_id=? '
+            'ORDER BY created_at DESC LIMIT 1',
+            (session['id'],)
+        )
+    row = cursor.fetchone()
     conn.close()
-
-    if not track:
+    if not row:
         return "저장된 트랙이 없습니다.", 400
 
-    # 쉼표로 구분된 장소 문자열을 리스트로 변환
-    place_names = track[0].split(',')
-
-    # 가게 이름으로 경유지 좌표 가져오기
+    # 2) place_names와 waypoints 조회
+    place_names = row[0].split(',')
     waypoints = get_waypoints(place_names)
-    print("Waypoints:", waypoints)
-    
-    if not waypoints:
-        return "경유지 좌표를 가져올 수 없습니다.", 400
-    if len(waypoints) < 2:
-        return "경로 계산을 위해서는 최소 2개 이상의 경유지가 필요합니다.", 400
-    
-    # Tmap API를 통해 경로 데이터 가져오기
+    if not waypoints or len(waypoints) < 2:
+        return "경로 계산에 필요한 경유지가 부족합니다.", 400
+
+    # 3) Tmap API로 route_points 생성 (기존 로직 유지)
     try:
         route_data = get_route(waypoints)
-        if not route_data:
-            return "경로 데이터를 가져오는데 실패했습니다.", 500
-        if 'features' not in route_data:
-            return "잘못된 경로 데이터 형식입니다.", 500
+        route_points = []
+        for feat in route_data.get('features', []):
+            if feat['geometry']['type'] == 'LineString':
+                for lon, lat in feat['geometry']['coordinates']:
+                    route_points.append({"lat": lat, "lng": lon})
+        if not route_points:
+            raise ValueError("유효한 경로 포인트가 없습니다")
     except Exception as e:
-        print(f"Route calculation error: {str(e)}")
-        return f"경로 계산 중 오류가 발생했습니다: {str(e)}", 500
+        return f"경로 처리 오류: {e}", 500
 
-    # 경로 데이터에서 라인 좌표 추출
-    route_points = []
-    try:
-        for feature in route_data['features']:
-            if feature['geometry']['type'] == 'LineString':
-                for coordinate in feature['geometry']['coordinates']:
-                    route_points.append({
-                        "lat": float(coordinate[1]),
-                        "lng": float(coordinate[0])
-                    })
-    except Exception as e:
-        print(f"Route processing error: {str(e)}")
-        return f"경로 데이터 처리 중 오류가 발생했습니다: {str(e)}", 500
-
-    if not route_points:
-        return "유효한 경로 포인트가 없습니다.", 500
-
-    # 경로 포인트를 지도에 전달
-    
-    # 장소 정보 가져오기
+    # 4) RESTAURANT_DF에서 필요한 장소 정보만 꺼내 places 리스트 구성
     places = []
-    for name, waypoint in zip(place_names, waypoints):
+    for wp, name in zip(waypoints, place_names):
+        # Name 컬럼으로 필터링
+        subset = RESTAURANT_DF[RESTAURANT_DF['Name'] == name]
+        if not subset.empty:
+            r         = subset.iloc[0]
+            address   = r['Address']
+            img       = r['Img']
+            homepage  = r['Homepage']
+            type_     = r['Type']
+            rate      = r['Rate']
+            operation = r['Operation']
+        else:
+            address = img = homepage = type_ = rate = operation = ''
+
         places.append({
-            "name": name,
-            "lat": float(waypoint['latitude']),
-            "lng": float(waypoint['longitude']),
-            "address": name,  # 실제 주소 정보가 있다면 여기에 추가
-            "img": f"/static/uploads/{name.replace(' ', '_')}.jpg"
+            "name":      name,
+            "lat":       float(wp['latitude']),
+            "lng":       float(wp['longitude']),
+            "address":   address,
+            "img":       img,
+            "homepage":  homepage,
+            "type":      type_,
+            "rate":      rate,
+            "operation": operation
         })
+    # 5) 템플릿에 전달
+    return render_template(
+        'Journey.html',
+        route_points=json.dumps(route_points),
+        places=json.dumps(places)
+    )
+#-------------- Journey 끝 --------------
 
-    # 경로 포인트와 장소 정보를 지도에 전달
+# TTS 언어별 장소 정보를 반환하는 엔드포인트
+@app.route('/locations', methods=['GET'])
+def get_locations():
+    lang = request.args.get('lang', 'ko').lower()
+    data = LOCATIONS.get(lang, LOCATIONS['ko'])
+    return jsonify(data)
 
-    return render_template('Journey.html', 
-                        route_points=json.dumps(route_points),
-                        places=json.dumps(places))
 @app.route('/Or')
 def Or():
     return render_template('or.html')
@@ -835,7 +947,7 @@ def delete_track(track_id):
     
     try:
         cursor.execute('DELETE FROM tracks WHERE id = ? AND user_id = ?', 
-                      (track_id, session['id']))
+                    (track_id, session['id']))
         conn.commit()
         success = cursor.rowcount > 0
         return jsonify({'success': success})
@@ -848,62 +960,30 @@ def delete_track(track_id):
 def make_session_permanent():
     session.permanent = True
 
-if __name__ == "__main__":
-    app.run(debug=True)
+
 
 
 #----------------journey에 tts병합
 
-# CSV 파일 로드 및 주소 좌표화
-def load_addresses():
-    geolocator = Nominatim(user_agent="geoapi")
-    data = pd.read_csv("places_en.csv")
-    data.columns = data.columns.str.strip()  # 열 이름의 공백 제거
-    locations = []
 
-    for _, row in data.iterrows():
-        address = row["Address"]
-        name = row["Name"]
-        explanation = row["Explanation"]  # 'Explantion' → 'Explanation'
-        try:
-            location = geolocator.geocode(address)
-            if location:
-                locations.append({
-                    "name": name,
-                    "address": address,
-                    "explanation": explanation,
-                    "lat": location.latitude,
-                    "lng": location.longitude,
-                })
-        except Exception as e:
-            print(f"Error geocoding {address}: {e}")
-    return locations
+# @app.route("/check-range", methods=["POST"])
+# def check_range():
+#     """사용자 위치가 반경 안에 있는지 확인."""
+#     try:
+#         user_lat = float(request.json["lat"])
+#         user_lng = float(request.json["lng"])
 
+#         for loc in LOCATIONS:
+#             place_coords = (loc["lat"], loc["lng"])
+#             user_coords = (user_lat, user_lng)
+#             if geodesic(place_coords, user_coords).meters <= 500:
+#                 return jsonify({"in_range": True, "explanation": loc["explanation"]})
+#         return jsonify({"in_range": False})
+#     except Exception as e:
+#         print("Error in /check-range:", str(e))  # 에러 메시지 출력
+#         return jsonify({"error": "Failed to check range"}), 500
+    
 
-LOCATIONS = load_addresses()
-
-@app.route("/locations", methods=["GET"])
-def get_locations():
-    """지도에 표시할 위치 데이터를 반환."""
-    try:
-        return jsonify(LOCATIONS)
-    except Exception as e:
-        print("Error in /locations:", str(e))  # 에러 메시지 출력
-        return jsonify({"error": "Failed to load locations"}), 500
-
-@app.route("/check-range", methods=["POST"])
-def check_range():
-    """사용자 위치가 반경 안에 있는지 확인."""
-    try:
-        user_lat = float(request.json["lat"])
-        user_lng = float(request.json["lng"])
-
-        for loc in LOCATIONS:
-            place_coords = (loc["lat"], loc["lng"])
-            user_coords = (user_lat, user_lng)
-            if geodesic(place_coords, user_coords).meters <= 500:
-                return jsonify({"in_range": True, "explanation": loc["explanation"]})
-        return jsonify({"in_range": False})
-    except Exception as e:
-        print("Error in /check-range:", str(e))  # 에러 메시지 출력
-        return jsonify({"error": "Failed to check range"}), 500
+if __name__ == "__main__":
+    app.run(debug=True)
+    print("실행 시작! 얼마나 걸릴지 모르니 기다리자")

@@ -10,7 +10,7 @@ function initMap() {
     });
 
     const routePoints = window.routePoints || [];
-    const places = window.places || [];
+
 
     const formattedRoutePoints = routePoints.map(p => ({ lat: p.lat, lng: p.lng }));
 
@@ -27,11 +27,102 @@ function initMap() {
     formattedRoutePoints.forEach(p => bounds.extend(p));
     map.fitBounds(bounds);
 
+// ---------- 마커 및 정보 박스 생성 ----------
     // 마커 및 정보 박스 생성
+    const infoWindow = new google.maps.InfoWindow();
+
+
+      // 2) 각 장소에 마커 추가 및 클릭 토글
+    const places = window.places || [];
     places.forEach(place => {
-        const infoBox = createPlaceInfoBox(place);
-        createPlaceMarker(map, place, infoBox);
+
+    // 디버깅: 실제 넘어오는 데이터 확인
+    console.log("Place 객체:", place);
+
+    const marker = new google.maps.Marker({
+        position: { lat: place.lat, lng: place.lng },
+        map,
+        title: place.name,
+        icon: {
+        path: google.maps.SymbolPath.CIRCLE,
+        scale: 8,
+        fillColor: "#FF0000",
+        fillOpacity: 1,
+        strokeWeight: 2,
+        strokeColor: "#fff"
+        }
     });
+
+    marker.addListener('click', () => {
+        // 같은 마커 클릭 시 닫기
+        if (infoWindow.getAnchor() === marker) {
+        infoWindow.close();
+        return;
+        }
+
+      // InfoWindow 콘텐츠 조립
+        const content = `
+            <div class="info-window-content">
+            <img src="${place.img || ''}" alt="${place.name}">
+            <h3>${place.name || '이름 없음'}</h3>
+            <p><strong>주소:</strong> ${place.address || '정보 없음'}</p>
+            <p><strong>평점:</strong> ${place.rate || '정보 없음'}</p>
+            <p><strong>영업시간:</strong> ${place.operation || '정보 없음'}</p>
+            <p><strong>타입:</strong> ${place.type || '정보 없음'}</p>
+            ${ place.homepage
+                ? `<a href="${place.homepage}" target="_blank">홈페이지</a>`
+                : ''
+            }
+            </div>
+        `;
+        infoWindow.setContent(content);
+        infoWindow.open(map, marker);
+        });
+    });
+    
+      // -------- TTS 마커 생성하기 --------
+    fetch('/locations')
+    .then(res => res.json())
+    .then(places => {
+        console.log(places); // 디버깅: 실제 넘어오는 데이터 확인
+    const t_infoWindow = new google.maps.InfoWindow();
+
+    // 2) 각 장소에 작은 옅은 파란색 원형 마커 찍기
+    places.forEach(place => {
+        const marker = new google.maps.Marker({
+        position: { lat: parseFloat(place.lat), lng: parseFloat(place.lng) },
+        map,
+        title: place.name,
+        icon: {
+            path: google.maps.SymbolPath.CIRCLE,
+            scale: 6,               // 작게
+            fillColor: "#ADD8E6",   // 옅은 파란색
+            fillOpacity: 0.8,
+            strokeColor: "#FFFFFF",
+            strokeWeight: 1
+        }
+        });
+
+        // 3) 클릭 시 InfoWindow에 이미지·타입·주소 표시
+        marker.addListener('click', () => {
+        const content = `
+            <div class="info-window-content">
+            <img src="${place.img || ''}" alt="${place.name}">
+            <h3>${place.name}</h3>
+            <p><strong>Type:</strong> ${place.type}</p>
+            <p><strong>Address:</strong> ${place.address}</p>
+            </div>`;
+        t_infoWindow.setContent(content);
+        t_infoWindow.open(map, marker);
+        });
+    });
+
+    // 지도 클릭 시 InfoWindow 닫기
+    map.addListener('click', () => t_infoWindow.close());
+    })
+    .catch(err => console.error('locations fetch error:', err));
+
+
 
     // 위치 추적 및 나침반 기능
     let isDirectionTracking = false;
@@ -165,8 +256,8 @@ function createPlaceInfoBox(place) {
     const box = document.createElement('div');
     box.className = 'place-info-box';
     box.innerHTML = `<img src="${place.img}" alt="${place.name}">
-                     <h3>${place.name}</h3>
-                     <p>${place.address}</p>`;
+                    <h3>${place.name}</h3>
+                    <p>${place.address}</p>`;
     document.body.appendChild(box);
     return box;
 }
@@ -196,3 +287,36 @@ function createPlaceMarker(map, place, box) {
         box.style.display = 'none';
     });
 }
+
+// initMap 함수 아래, 또는 파일 하단에 추가
+document.addEventListener('DOMContentLoaded', () => {
+    let ttsEnabled = false;
+    const ttsToggleButton    = document.getElementById('ttsToggleButton');
+    const ttsModal           = document.getElementById('ttsModal');
+    const ttsModalClose      = document.getElementById('ttsModalClose');
+    const ttsActivateButton  = document.getElementById('ttsActivateButton');
+
+    // 1) 버튼 클릭 시 모달 열기
+    ttsToggleButton.addEventListener('click', () => {
+        ttsModal.style.display = 'block';
+    });
+
+    // 2) 닫기 아이콘 또는 모달 외곽 클릭 시 모달 닫기
+    ttsModalClose.addEventListener('click', () => {
+        ttsModal.style.display = 'none';
+    });
+    window.addEventListener('click', (e) => {
+        if (e.target === ttsModal) ttsModal.style.display = 'none';
+    });
+
+    // 3) 활성화 버튼 클릭 시 TTS 상태 변경
+    ttsActivateButton.addEventListener('click', () => {
+        const lang = document.querySelector('input[name="ttsLang"]:checked').value;
+        ttsEnabled = true;
+        // 버튼 텍스트 및 색상 업데이트
+        ttsToggleButton.textContent = `TTS 활성화 (${lang})`;
+        ttsToggleButton.style.backgroundColor = '#34A853';
+        ttsModal.style.display = 'none';
+        // 이후 실제 TTS 로직과 연동할 때 ttsEnabled와 lang 변수를 사용하세요
+    });
+});

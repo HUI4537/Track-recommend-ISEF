@@ -30,7 +30,7 @@
             <li class="nav-item"><a href="/../../../" class="nav-link">홈</a></li>
             <li class="nav-item"><a href="{{ url_for('official_survey') }}" class="nav-link">Track Select</a></li>
             <li class="nav-item"><a href="{{ url_for('index') }}" class="nav-link">Track Share</a></li>
-            <li class="nav-item"><a href="{{ url_for('Journey') }}" class="nav-link">Travel Start!</a></li>
+            <li class="nav-item"><a href="{{ url_for('track_select') }}" class="nav-link">Travel Start!</a></li>
             {% if session['loggedin'] %}
             <li class="nav-item"><a href="{{ url_for('profile') }}" class="nav-link">Mypage</a></li>
             {% else %}

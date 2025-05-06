@@ -37,7 +37,7 @@
             <li class="nav-item"><a href="/../../../" class="nav-link">홈</a></li>
             <li class="nav-item"><a href="{{ url_for('official_survey') }}" class="nav-link">Track Select</a></li>
             <li class="nav-item"><a href="{{ url_for('index') }}" class="nav-link">Track Share</a></li>
-            <li class="nav-item"><a href="{{ url_for('Journey') }}" class="nav-link">Travel Start!</a></li>
+            <li class="nav-item"><a href="{{ url_for('track_select') }}" class="nav-link">Travel Start!</a></li>
             {% if session['loggedin'] %}
             <li class="nav-item"><a href="{{ url_for('profile') }}" class="nav-link">Mypage</a></li>
             {% else %}
@@ -45,8 +45,10 @@
             {% endif %}
         </ul>
     </nav>
+    
 
     <div class="container">
+        <p align="center" >A total of {{ recommended_places|length }} Recommended</p>
         <!-- 추천 장소 목록 -->
         {% for place in recommended_places %}
         {% set place_id = place['Name'] | replace(' ', '_') %}
@@ -55,8 +57,17 @@
             <div class="card-content">
                 <h3 class="card-title">{{ place['Name'] }}</h3>
                 <p class="card-address">{{ place['Address'] }}</p>
+
+                    <!-- 새로 추가된 정보들 -->
+                    <p class="card-rate">Rate: {{ place['Rate'] }}</p>
+                    <p class="card-type">Type: {{ place['Type'] }}</p>
+                    <p class="card-operation">Operation: {{ place['Operation'] }}</p>
+                    
+                    <a href="{{ place['Homepage'] }}" target="_blank" class="card-link">
+                        Place Homepage
+                    </a>
+                </div>
             </div>
-        </div>
         {% endfor %}
         <button onclick="submitSelection()" class="next-button">다음</button>
     </div>

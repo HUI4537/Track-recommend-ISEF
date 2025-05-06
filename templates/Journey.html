@@ -53,6 +53,27 @@
         </ul>
     </nav>
     <div id="map"></div>
+
+    <button id="ttsToggleButton" class="tts-toggle-button">
+        TTS 비활성화
+    </button>
     <button id="directionButton" class="direction-button">🧭</button>
+
+
+    <!-- TTS 설정 모달 -->
+
+    <div id="ttsModal" class="tts-modal">
+        <div class="tts-modal-content">
+            <span id="ttsModalClose" class="tts-modal-close">&times;</span>
+            <h3>언어 선택</h3>
+            <label><input type="radio" name="ttsLang" value="KOR" checked> KOR</label>
+            <label><input type="radio" name="ttsLang" value="EN"> EN</label>
+            <label><input type="radio" name="ttsLang" value="JA"> JA</label>
+            <button id="ttsActivateButton" class="tts-activate-button">
+                활성화
+            </button>
+        </div>
+    </div>
+
 </body>
 </html>
