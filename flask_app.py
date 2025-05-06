@@ -77,6 +77,7 @@ def gomain():
 def test():
     return render_template("Test.html")
 
+
 @app.route("/api/data")
 def api_data():
     data = load_data()
@@ -587,21 +588,38 @@ def save_order():
         return jsonify({'success': True, 'message': '트랙이 저장되었습니다.'})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+    
+
+# Journey    
 @app.route('/Journey')
 def Journey():
     if 'loggedin' not in session:
         return redirect(url_for('login'))
 
-    # 데이터베이스에서 사용자의 가장 최근 트랙 정보 가져오기
+    # URL에서 track_id 파라미터 가져오기
+    track_id = request.args.get('track_id')
+    
+    # 데이터베이스에서 트랙 정보 가져오기
     conn = get_logindb_connection()
     cursor = conn.cursor()
-    cursor.execute('''
-        SELECT track_places 
-        FROM tracks 
-        WHERE user_id = ? 
-        ORDER BY created_at DESC 
-        LIMIT 1
-    ''', (session['id'],))
+    
+    if track_id:
+        # 특정 트랙 ID로 조회
+        cursor.execute('''
+            SELECT track_places 
+            FROM tracks 
+            WHERE id = ? AND user_id = ?
+        ''', (track_id, session['id']))
+    else:
+        # track_id가 없으면 가장 최근 트랙 조회
+        cursor.execute('''
+            SELECT track_places 
+            FROM tracks 
+            WHERE user_id = ? 
+            ORDER BY created_at DESC 
+            LIMIT 1
+        ''', (session['id'],))
+    
     track = cursor.fetchone()
     conn.close()
 
@@ -609,11 +627,11 @@ def Journey():
         return "저장된 트랙이 없습니다.", 400
 
     # 쉼표로 구분된 장소 문자열을 리스트로 변환
-    place_names = track[0].split(',') # track은 튜플이므로 첫 번째 요소에 접근
-    
+    place_names = track[0].split(',')
+
     # 가게 이름으로 경유지 좌표 가져오기
     waypoints = get_waypoints(place_names)
-    print("Waypoints:", waypoints) # 디버깅을 위한 출력
+    print("Waypoints:", waypoints)
     
     if not waypoints:
         return "경유지 좌표를 가져올 수 없습니다.", 400
@@ -624,7 +642,7 @@ def Journey():
     try:
         route_data = get_route(waypoints)
         if not route_data:
-            return "경로 데이터를 가져오는데 패했습니다.", 500
+            return "경로 데이터를 가져오는데 실패했습니다.", 500
         if 'features' not in route_data:
             return "잘못된 경로 데이터 형식입니다.", 500
     except Exception as e:
@@ -649,8 +667,23 @@ def Journey():
         return "유효한 경로 포인트가 없습니다.", 500
 
     # 경로 포인트를 지도에 전달
-    return render_template('Journey.html', route_points=json.dumps(route_points))
+    
+    # 장소 정보 가져오기
+    places = []
+    for name, waypoint in zip(place_names, waypoints):
+        places.append({
+            "name": name,
+            "lat": float(waypoint['latitude']),
+            "lng": float(waypoint['longitude']),
+            "address": name,  # 실제 주소 정보가 있다면 여기에 추가
+            "img": f"/static/uploads/{name.replace(' ', '_')}.jpg"
+        })
 
+    # 경로 포인트와 장소 정보를 지도에 전달
+
+    return render_template('Journey.html', 
+                        route_points=json.dumps(route_points),
+                        places=json.dumps(places))
 @app.route('/Or')
 def Or():
     return render_template('or.html')
@@ -772,29 +805,21 @@ def track_select():
     
     # 현재 로그인한 사용자의 트랙 정보 가져오기
     cursor.execute('''
-        SELECT t.id, t.name, t.created_at, t.track_places,
-               r1.image_url as first_restaurant_image,
-               r2.image_url as last_restaurant_image
-        FROM tracks t
-        LEFT JOIN restaurants r1 ON r1.name = (
-            SELECT value FROM json_each(t.track_places) WHERE key = 0
-        )
-        LEFT JOIN restaurants r2 ON r2.name = (
-            SELECT value FROM json_each(t.track_places) WHERE key = json_array_length(t.track_places) - 1
-        )
-        WHERE t.user_id = ?
-        ORDER BY t.created_at DESC
+        SELECT id, created_at, track_places, start_date, end_date, track_type
+        FROM tracks 
+        WHERE user_id = ?
+        ORDER BY created_at DESC
     ''', (session['id'],))
     
     tracks = []
     for row in cursor.fetchall():
         tracks.append({
             'id': row[0],
-            'name': row[1],
-            'created_date': row[2],
-            'places': row[3].split(','),
-            'first_restaurant_image': row[4] or '/static/default_restaurant.jpg',
-            'last_restaurant_image': row[5] or '/static/default_restaurant.jpg'
+            'created_at': row[1],
+            'track_places': row[2],
+            'start_date': row[3],
+            'end_date': row[4],
+            'track_type': row[5]
         })
     
     conn.close()

@@ -3,94 +3,218 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>트랙 선택</title>
+    <title>시끌시끌 - 트랙 선택</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚲</text></svg>">
+    <link rel="stylesheet" href="../static/basic.css">
+    <link rel="stylesheet" href="../static/Menu/menu_style.css">
+    <link rel="stylesheet" href="../static/Main/main.css">
+    <script src="/static/Menu/menu_script.js"></script>
     <style>
-        .track-container {
-            display: flex;
-            margin: 20px;
-            padding: 15px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            position: relative;
+        @font-face {
+            font-family: 'HancomMalangMalang-Regular';
+            src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2406-1@1.0/HancomMalangMalang-Regular.woff2') format('woff2');
+            font-weight: 400;
+            font-style: normal;
         }
 
-        .track-images {
-            display: flex;
-            gap: 10px;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'HancomMalangMalang-Regular', Arial, sans-serif;
         }
 
-        .track-image {
-            width: 100px;
-            height: 100px;
-            object-fit: cover;
-            border-radius: 4px;
+        body {
+            background-color: #f9f9f9;
+            color: #333;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-bottom: 60px;
+        }
+
+        .content {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            width: 100%;
+        }
+
+        .page-title {
+            text-align: center;
+            color: #333;
+            margin-bottom: 2rem;
+            font-size: 2rem;
+        }
+
+        .tracks-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            padding: 1rem;
+        }
+
+        .track-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+        }
+
+        .track-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+        .track-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .track-number {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .track-date {
+            color: #666;
+            font-size: 0.9rem;
         }
 
         .track-info {
-            margin-left: 20px;
-            flex-grow: 1;
+            color: #444;
         }
 
-        .delete-btn {
-            position: absolute;
-            bottom: 10px;
-            right: 10px;
-            background-color: #ff4444;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 12px;
+        .track-info p {
+            margin: 0.5rem 0;
+            display: flex;
+            align-items: center;
         }
 
-        .track-container:hover {
-            background-color: #f5f5f5;
-            cursor: pointer;
+        .track-info p::before {
+            content: "•";
+            margin-right: 0.5rem;
+            color: #3498db;
+        }
+
+        .no-tracks {
+            text-align: center;
+            padding: 3rem;
+            background: white;
+            border-radius: 12px;
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .track-type {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            background: #e3f2fd;
+            color: #1976d2;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-top: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .tracks-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .page-title {
+                font-size: 1.5rem;
+            }
         }
     </style>
 </head>
 <body>
-    <h1>내 트랙 목록</h1>
-    
-    <div id="tracks-list">
-        {% for track in tracks %}
-        <div class="track-container" onclick="selectTrack('{{ track.id }}')">
-            <div class="track-images">
-                <img src="{{ track.first_restaurant_image }}" alt="첫 번째 식당" class="track-image">
-                <img src="{{ track.last_restaurant_image }}" alt="마지막 식당" class="track-image">
-            </div>
-            <div class="track-info">
-                <h3>{{ track.name }}</h3>
-                <p>생성일: {{ track.created_date }}</p>
-                <p>경유지: {{ track.places|join(', ') }}</p>
-            </div>
-            <button class="delete-btn" onclick="confirmDelete(event, '{{ track.id }}')">삭제</button>
+    <!-- 헤더 -->
+    <header class="header">
+        <!-- 로고 -->
+        <div class="logo_container">
+            <img src="../picture/logo/logo.png" alt="logo" class="logo" />
         </div>
-        {% endfor %}
-    </div>
 
-    <script>
-        function selectTrack(trackId) {
-            window.location.href = `/Journey?track_id=${trackId}`;
-        }
+        <!-- 햄버거 메뉴 -->
+        <div class="hamburger-menu" id="hamburger-menu">
+            &#9776;
+        </div>
+    </header>
 
-        function confirmDelete(event, trackId) {
-            event.stopPropagation();
-            if (confirm('이 트랙을 삭제하시겠습니까?')) {
-                fetch(`/delete_track/${trackId}`, {
-                    method: 'DELETE',
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        location.reload();
-                    } else {
-                        alert('트랙 삭제에 실패했습니다.');
-                    }
-                });
-            }
-        }
-    </script>
+    <!-- 사이드바 -->
+    <nav class="sidebar" id="sidebar">
+        <ul class="sidebar-nav">
+            <li class="nav-item"><a href="/../../../" class="nav-link">홈</a></li>
+            <li class="nav-item"><a href="/official_survey" class="nav-link">Track Select</a></li>
+            <li class="nav-item"><a href="/index" class="nav-link">Track Share</a></li>
+            <li class="nav-item"><a href="/Journey" class="nav-link">Travel Start!</a></li>
+            {% if session['loggedin'] %}
+            <li class="nav-item"><a href="{{ url_for('profile') }}" class="nav-link">Mypage</a></li>
+            <li class="nav-item"><a href="{{ url_for('logout') }}" class="nav-link">Logout</a></li>
+            {% else %}
+            <li class="nav-item"><a href="{{ url_for('login') }}" class="nav-link">Login</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+
+    <section class="content">
+        <h1 class="page-title">.</h1>
+        <h1 class="page-title">`</h1>
+        <h1 class="page-title">나의 트랙</h1>
+        <div class="tracks-grid">
+            {% if tracks %}
+                {% for track in tracks %}
+                    <div class="track-card" onclick="location.href='/Journey?track_id={{ track.id }}'">
+                        <div class="track-header">
+                            <span class="track-number">트랙 #{{ loop.index }}</span>
+                            <span class="track-date">{{ track.created_at }}</span>
+                        </div>
+                        <div class="track-info">
+                            <p><strong>방문 장소:</strong> {{ track.track_places }}</p>
+                            <p><strong>시작일:</strong> {{ track.start_date or '미지정' }}</p>
+                            <p><strong>종료일:</strong> {{ track.end_date or '미지정' }}</p>
+                            {% if track.track_type %}
+                                <span class="track-type">{{ track.track_type }}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="no-tracks">
+                    <p>아직 저장된 트랙이 없습니다.</p>
+                    <p>새로운 트랙을 만들어보세요!</p>
+                </div>
+            {% endif %}
+        </div>
+    </section>
+
+    <!-- 네비게이션 바 -->
+    <nav class="bottom_nav">
+        <a href="/Main" class="nav_item home_button">
+            <span class="nav_icon">🏠</span>
+            <p>HOME</p>
+        </a>
+        <a href="/Or" class="nav_item">
+            <span class="nav_icon">🗺️</span>
+            <p>Track Select</p>
+        </a>
+        <a href="/index" class="nav_item">
+            <span class="nav_icon">🚀</span>
+            <p>Track Share</p>
+        </a>
+        <a href="../Journey" class="nav_item">
+            <span class="nav_icon">🚲</span>
+            <p>Travel Start!</p>
+        </a>
+    </nav>
 </body>
 </html>
+
