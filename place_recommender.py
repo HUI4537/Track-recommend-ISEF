@@ -1,6 +1,5 @@
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
-from sentence_transformers import SentenceTransformer
 
 class PlaceRecommender:
     def __init__(self, user_profiles, user_place_matrix, num_latent_features=2, learning_rate=0.01, num_epochs=1000):
@@ -10,7 +9,6 @@ class PlaceRecommender:
         self.num_latent_features = num_latent_features  # 잠재 요인 개수 설정
         self.learning_rate = learning_rate  # 학습률 설정
         self.num_epochs = num_epochs  # 학습 반복 횟수 설정
-        self.text_embedding_model = SentenceTransformer('paraphrase-MiniLM-L6-v2')  # 문장 임베딩 모델 로드
 
         # 행렬 분해를 위한 잠재 요인 초기화
         np.random.seed(0)  # 무작위 시드 설정
@@ -36,16 +34,6 @@ class PlaceRecommender:
                     self.user_latent_factors[user_id] += self.learning_rate * prediction_error * self.place_latent_factors[place_id]
                     self.place_latent_factors[place_id] += self.learning_rate * prediction_error * self.user_latent_factors[user_id]
 
-    def _compute_text_similarity(self, new_text, existing_texts):
-        # 새 텍스트와 기존 텍스트들 간의 코사인 유사도 계산
-        new_text_embedding = self.text_embedding_model.encode(new_text)  # 새 텍스트 임베딩 생성
-        text_similarities = {}
-        for user_id, existing_text in existing_texts.items():
-            existing_text_embedding = self.text_embedding_model.encode(existing_text)  # 기존 텍스트 임베딩 생성
-            similarity_score = cosine_similarity([new_text_embedding], [existing_text_embedding])[0][0]  # 유사도 계산
-            text_similarities[user_id] = similarity_score  # 유사도 저장
-        return text_similarities
-
     def _compute_profile_similarity(self, new_user_profile):
         # 새로운 유저 프로필과 기존 유저 프로필들 간의 유사도 계산
         profile_vectors = []  # 프로필 벡터 리스트
@@ -56,15 +44,8 @@ class PlaceRecommender:
             user_ids.append(user_id)
         profile_similarity_scores = cosine_similarity([[1,1,1]], profile_vectors)[0]  # 코사인 유사도로 프로필 유사도 계산
 
-        # travel_pref와 food_pref의 유사도 계산
-        travel_preference_similarity = self._compute_text_similarity(new_user_profile['travel_pref'],
-                                                               {user_id: profile['travel_pref'] for user_id, profile in self.user_profiles.items()})
-        food_preference_similarity = self._compute_text_similarity(new_user_profile['food_pref'],
-                                                             {user_id: profile['food_pref'] for user_id, profile in self.user_profiles.items()})
-
         # 유사도를 가중치로 결합 (travel_pref와 food_pref는 각각 0.3, 나머지는 0.4로 설정)
-        combined_similarity_scores = {user_id: profile_similarity_scores[idx] * 0.4 + travel_preference_similarity[user_id] * 0.3 + food_preference_similarity[user_id] * 0.3
-                               for idx, user_id in enumerate(user_ids)}
+        combined_similarity_scores = {user_id: profile_similarity_scores[idx] for idx, user_id in enumerate(user_ids)}
         return combined_similarity_scores
 
     def place_recommend(self, new_user_profile, num_recommendations=10):
