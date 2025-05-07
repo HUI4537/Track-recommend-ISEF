@@ -1,5 +1,4 @@
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify, send_from_directory,send_file
-from flask_mysqldb import MySQL
 import os
 import sqlite3
 import base64
