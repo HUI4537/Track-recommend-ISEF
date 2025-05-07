@@ -1,3 +1,70 @@
+// 현재 읽고 있는 TTS utterance
+let ttsCurrentUtterance = null;
+// 한 번 읽은 장소를 추적
+const ttsSpokenPlaces = new Set();
+
+// TTS 자동 팝업용 InfoWindow 
+
+// ▶︎ 추가: TTS 활성화 상태와 파란 마커 리스트
+let ttsEnabled = false;
+const placeMarkersTTS = [];
+
+
+/**
+ * 효과음 재생 → 안내 멘트 → TTS 읽기
+ * @param {string} name 장소 이름
+ * @param {string} text 설명 텍스트
+ */
+function speakText(name, text) {
+    // 1) 효과음 재생
+    const sound = new Audio('/static/sounds/alert.mp3');
+    sound.play();
+
+    // 2) 효과음 끝난 뒤에 안내 멘트 + 설명 읽기
+    sound.onended = () => {
+        const fullText = `${name}에 대한 설명을 시작합니다. ${text}`;
+        window.speechSynthesis.cancel();
+        const utt = new SpeechSynthesisUtterance(fullText);
+        utt.lang = 'ko-KR';
+        window.speechSynthesis.speak(utt);
+        ttsCurrentUtterance = utt;
+    };
+}
+
+
+
+// TTS 작업 큐
+const ttsQueue = [];
+
+// 큐에서 하나 꺼내 InfoWindow + TTS 실행
+function processNextTTS() {
+    if (ttsQueue.length === 0) return;
+    const { marker, info } = ttsQueue.shift();
+
+    // InfoWindow 열기
+    const content = `
+        <div class="info-window-content">
+        <img src="${info.img||''}" alt="${info.name}">
+        <h3>${info.name}</h3>
+        <p>${info.explanation}</p>
+        </div>`;
+    t_infoWindow.setContent(content);
+    t_infoWindow.open(marker.getMap(), marker);
+
+    // 효과음 + 안내 + 설명 읽기
+    const sound = new Audio('/static/sounds/alert.mp3');
+    sound.play();
+    sound.onended = () => {
+        const fullText = `${info.name}에 대한 설명을 시작합니다. ${info.explanation}`;
+        const utt = new SpeechSynthesisUtterance(fullText);
+        utt.lang = 'ko-KR';
+        utt.onend = () => processNextTTS();        // 다음 아이템 처리
+        window.speechSynthesis.cancel();
+        window.speechSynthesis.speak(utt);
+        ttsCurrentUtterance = utt;
+    };
+}
+
 
 function initMap() {
     const map = new google.maps.Map(document.getElementById("map"), {
@@ -10,7 +77,7 @@ function initMap() {
     });
 
     const routePoints = window.routePoints || [];
-
+    
 
     const formattedRoutePoints = routePoints.map(p => ({ lat: p.lat, lng: p.lng }));
 
@@ -26,6 +93,9 @@ function initMap() {
     const bounds = new google.maps.LatLngBounds();
     formattedRoutePoints.forEach(p => bounds.extend(p));
     map.fitBounds(bounds);
+
+
+    const t_infoWindow = new google.maps.InfoWindow();
 
 // ---------- 마커 및 정보 박스 생성 ----------
     // 마커 및 정보 박스 생성
@@ -90,7 +160,9 @@ function initMap() {
     .then(res => res.json())
     .then(places => {
         console.log(places); // 디버깅: 실제 넘어오는 데이터 확인
-    const t_infoWindow = new google.maps.InfoWindow();
+
+    
+
 
     // 2) 각 장소에 작은 옅은 파란색 원형 마커 찍기
     places.forEach(place => {
@@ -111,7 +183,11 @@ function initMap() {
         title: place.name,
         icon: customIcon
         });
-    
+
+        // 마커 정보 TTS 배열에 추가
+        placeMarkersTTS.push({ marker, info: place });
+
+
         // 디버깅: 실제 아이콘 프로퍼티 확인
         console.log("Marker icon:", marker.getIcon());
         
@@ -141,7 +217,21 @@ function initMap() {
     })
     .catch(err => console.error('locations fetch error:', err));
 
-
+    // InfoWindow 닫기 버튼(X) 클릭 시 음성 중단
+    t_infoWindow.addListener('closeclick', () => {
+        if (ttsCurrentUtterance) {
+        window.speechSynthesis.cancel();
+        ttsCurrentUtterance = null;
+        }
+    });
+    //TTS 비활성화를 위한 기능
+    t_infoWindow.addListener('closeclick', () => {
+        // InfoWindow 닫힐 때 TTS 중지
+        if (ttsCurrentUtterance) {
+            window.speechSynthesis.cancel();
+            ttsCurrentUtterance = null;
+        }
+    });
 
     // 위치 추적 및 나침반 기능
     let isDirectionTracking = false;
@@ -202,6 +292,8 @@ function initMap() {
                 lat: pos.coords.latitude,
                 lng: pos.coords.longitude
             };
+
+            //user 마커
             if (!userMarker) {
                 userMarker = new google.maps.Marker({
                     position: latlng,
@@ -219,7 +311,8 @@ function initMap() {
             } else {
                 userMarker.setPosition(latlng);
             }
-
+            
+            // 정확도 원
             if (!accuracyCircle) {
                 accuracyCircle = new google.maps.Circle({
                     strokeColor: "#4285F4",
@@ -236,8 +329,43 @@ function initMap() {
                 accuracyCircle.setRadius(pos.coords.accuracy);
             }
 
+            // 가운데 정렬
             if (isDirectionTracking && !isDragging) {
                 map.setCenter(latlng);
+            }
+
+            
+            // --- 자동 팝업 & TTS ---
+            if (ttsEnabled) {
+                const userLatLng = new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude);
+                const range = Math.max(50, pos.coords.accuracy);  // 50m 이상, 또는 정확도 반경
+
+                placeMarkersTTS.forEach(({ marker, info }) => {
+                    // 이미 읽은 장소 스킵
+                    if (ttsSpokenPlaces.has(info.name)) return;
+
+                    const dist = google.maps.geometry.spherical.computeDistanceBetween(
+                        userLatLng,
+                        marker.getPosition()
+                    );
+
+                    if (dist <= range) {
+                        // 1) InfoWindow 열기
+                        const content = `
+                        <div class="info-window-content">
+                            <img src="${info.img || ''}" alt="${info.name}">
+                            <h3>${info.name}</h3>
+                            <p>${info.explanation}</p>
+                        </div>`;
+                        t_infoWindow.setContent(content);
+                        t_infoWindow.open(map, marker);
+
+                        // 2) TTS 읽기
+                        speakText(info.name, info.explanation);
+
+                        ttsSpokenPlaces.add(info.name);
+                    }
+                });
             }
         }, err => {
             console.warn("위치 접근 실패:", err);
@@ -246,6 +374,8 @@ function initMap() {
             maximumAge: 0,
             timeout: 10000
         });
+
+
     }
 
     directionButton.addEventListener('click', () => {
@@ -309,9 +439,8 @@ function createPlaceMarker(map, place, box) {
 
 // initMap 함수 아래, 또는 파일 하단에 추가
 document.addEventListener('DOMContentLoaded', () => {
-    let ttsEnabled = false;
 
-    let selectedLang = "KOR";
+    selectedLang = "KOR";
 
     const ttsToggleButton    = document.getElementById('ttsToggleButton');
     const ttsModal           = document.getElementById('ttsModal');
@@ -340,11 +469,16 @@ document.addEventListener('DOMContentLoaded', () => {
             selectedLang = null;
             ttsToggleButton.textContent = `TTS 비활성화`;
             ttsToggleButton.style.backgroundColor = '#666';  // 중립 색상
+
+            // 이미 읽은 장소 목록 초기화
+            ttsSpokenPlaces.clear();
         } else {
             ttsEnabled = true;
             selectedLang = lang;
             ttsToggleButton.textContent = `TTS 활성화 (${lang})`;
             ttsToggleButton.style.backgroundColor = '#34A853';  // 활성 색상
+
+            ttsSpokenPlaces.clear();  // 활성화 시 읽은 장소 목록 초기화
         }
 
         ttsModal.style.display = 'none';
