@@ -540,7 +540,6 @@ def setup_database():
 
 
 from place_recommender import PlaceRecommender
-import pandas as pd
 
 
 @app.route('/Recommend')
