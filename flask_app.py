@@ -55,36 +55,43 @@ CSV_FILES = {
 }
 
 def load_places(csv_path):
-    # 1) CSV에서 Name,Address,Operation,Type,Explanation,Img 필드만 읽어 리스트에 저장
+    import csv
+    from route_finder import get_waypoints
+
+    # 1) CSV 파싱
     rows = []
+    name_to_info = {}
     with open(csv_path, encoding='utf-8', newline='') as f:
         reader = csv.DictReader(f)
         for row in reader:
-            rows.append({
-                'name':        row.get('Name', '').strip(),
-                'address':     row.get('Address', '').strip(),
-                'operation':   row.get('Operation', '').strip(),
-                'type':        row.get('Type', '').strip(),
+            name = row.get('Name', '').strip()
+            address = row.get('Address', '').strip()
+            info = {
+                'name': name,
+                'address': address,
+                'operation': row.get('Operation', '').strip(),
+                'type': row.get('Type', '').strip(),
                 'explanation': row.get('Explanation', '').strip(),
-                'img':         row.get('Img', '').strip(),
+                'img': row.get('Img', '').strip()
+            }
+            rows.append(info)
+            name_to_info[name] = info
+
+    # 2) 주소 기반으로 위경도 추출
+    addresses = [row['address'] for row in rows]
+    coords = get_waypoints(addresses)
+
+    # 3) 주소와 위경도를 이름 기준으로 재결합
+    places = []
+    for info, coord in zip(rows, coords):
+        if coord:  # 좌표가 정상적으로 계산된 경우에만 포함
+            places.append({
+                **info,
+                'lat': float(coord['latitude']),
+                'lng': float(coord['longitude']),
             })
 
-    # 2) 위경도가 필요하므로, Name 목록만 뽑아 get_waypoints 호출
-    
-    place_names = [info['address'] for info in rows]
-    coords      = get_waypoints(place_names)   # turn4file0
-
-    # 3) rows와 coords를 순서대로 합쳐 최종 places 리스트 생성
-    places = []
-    for info, wp in zip(rows, coords):
-        places.append({
-            **info,
-            'lat': float(wp['latitude']),
-            'lng': float(wp['longitude']),
-        })
-
     return places
-
 # 서버 시작 시 한 번만 로드
 LOCATIONS = {
     lang: load_places(path)
@@ -710,38 +717,26 @@ def save_order():
         return jsonify({'error': str(e)}), 500
     
 
-# Journey    
-@app.route('/Journey')
+# Journey    @app.route('/Journey')
 def Journey():
     if 'loggedin' not in session:
         return redirect(url_for('login'))
 
-    # 1) DB에서 track_places 가져오기
     track_id = request.args.get('track_id')
     conn = get_logindb_connection(); cursor = conn.cursor()
     if track_id:
-        cursor.execute(
-            'SELECT track_places FROM tracks WHERE id=? AND user_id=?',
-            (track_id, session['id'])
-        )
+        cursor.execute('SELECT track_places FROM tracks WHERE id=? AND user_id=?', (track_id, session['id']))
     else:
-        cursor.execute(
-            'SELECT track_places FROM tracks WHERE user_id=? '
-            'ORDER BY created_at DESC LIMIT 1',
-            (session['id'],)
-        )
+        cursor.execute('SELECT track_places FROM tracks WHERE user_id=? ORDER BY created_at DESC LIMIT 1', (session['id'],))
     row = cursor.fetchone()
     conn.close()
+
     if not row:
         return "저장된 트랙이 없습니다.", 400
 
-    # 2) place_names와 waypoints 조회
     place_names = row[0].split(',')
     waypoints = get_waypoints(place_names)
-    if not waypoints or len(waypoints) < 2:
-        return "경로 계산에 필요한 경유지가 부족합니다.", 400
 
-    # 3) Tmap API로 route_points 생성 (기존 로직 유지)
     try:
         route_data = get_route(waypoints)
         route_points = []
@@ -754,34 +749,35 @@ def Journey():
     except Exception as e:
         return f"경로 처리 오류: {e}", 500
 
-    # 4) RESTAURANT_DF에서 필요한 장소 정보만 꺼내 places 리스트 구성
+    # waypoints 이름 매핑
+    waypoint_map = {}
+    for i, wp in enumerate(waypoints):
+        wp_name = wp.get('name') or (place_names[i] if i < len(place_names) else None)
+        if wp_name:
+            waypoint_map[wp_name.strip()] = wp
+
     places = []
-    for wp, name in zip(waypoints, place_names):
-        # Name 컬럼으로 필터링
+    for name in place_names:
+        wp = waypoint_map.get(name.strip())
+        if not wp:
+            print(f"[경고] '{name}'에 대한 위경도 정보를 찾지 못했습니다.")
+            continue
+
         subset = RESTAURANT_DF[RESTAURANT_DF['Name'] == name]
         if not subset.empty:
-            r         = subset.iloc[0]
-            address   = r['Address']
-            img       = r['Img']
-            homepage  = r['Homepage']
-            type_     = r['Type']
-            rate      = r['Rate']
-            operation = r['Operation']
-        else:
-            address = img = homepage = type_ = rate = operation = ''
+            r = subset.iloc[0]
+            places.append({
+                "name": name,
+                "lat": float(wp['latitude']),
+                "lng": float(wp['longitude']),
+                "address": r.get('Address', ''),
+                "img": r.get('Img', ''),
+                "homepage": r.get('Homepage', ''),
+                "type": r.get('Type', ''),
+                "rate": r.get('Rate', ''),
+                "operation": r.get('Operation', '')
+            })
 
-        places.append({
-            "name":      name,
-            "lat":       float(wp['latitude']),
-            "lng":       float(wp['longitude']),
-            "address":   address,
-            "img":       img,
-            "homepage":  homepage,
-            "type":      type_,
-            "rate":      rate,
-            "operation": operation
-        })
-    # 5) 템플릿에 전달
     return render_template(
         'Journey.html',
         route_points=json.dumps(route_points),

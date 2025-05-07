@@ -31,7 +31,12 @@ function initMap() {
     // 마커 및 정보 박스 생성
     const infoWindow = new google.maps.InfoWindow();
 
+    // 자동 오픈을 한 번만 수행할 대상을 추적
+    const openedOnce = new Set();
 
+    // 마커와 place 정보를 담을 배열
+    const placeMarkers = [];
+    
       // 2) 각 장소에 마커 추가 및 클릭 토글
     const places = window.places || [];
     places.forEach(place => {
@@ -305,6 +310,9 @@ function createPlaceMarker(map, place, box) {
 // initMap 함수 아래, 또는 파일 하단에 추가
 document.addEventListener('DOMContentLoaded', () => {
     let ttsEnabled = false;
+
+    let selectedLang = "KOR";
+
     const ttsToggleButton    = document.getElementById('ttsToggleButton');
     const ttsModal           = document.getElementById('ttsModal');
     const ttsModalClose      = document.getElementById('ttsModalClose');
@@ -326,11 +334,21 @@ document.addEventListener('DOMContentLoaded', () => {
     // 3) 활성화 버튼 클릭 시 TTS 상태 변경
     ttsActivateButton.addEventListener('click', () => {
         const lang = document.querySelector('input[name="ttsLang"]:checked').value;
-        ttsEnabled = true;
-        // 버튼 텍스트 및 색상 업데이트
-        ttsToggleButton.textContent = `TTS 활성화 (${lang})`;
-        ttsToggleButton.style.backgroundColor = '#34A853';
+
+        if (lang === "Deactive") {
+            ttsEnabled = false;
+            selectedLang = null;
+            ttsToggleButton.textContent = `TTS 비활성화`;
+            ttsToggleButton.style.backgroundColor = '#666';  // 중립 색상
+        } else {
+            ttsEnabled = true;
+            selectedLang = lang;
+            ttsToggleButton.textContent = `TTS 활성화 (${lang})`;
+            ttsToggleButton.style.backgroundColor = '#34A853';  // 활성 색상
+        }
+
         ttsModal.style.display = 'none';
+
         // 이후 실제 TTS 로직과 연동할 때 ttsEnabled와 lang 변수를 사용하세요
     });
 });
