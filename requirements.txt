@@ -1,13 +1,13 @@
-flask==3.0.3
+Flask==3.0.3
 Flask-Cors==5.0.0
-geopy==2.4.1
+flask-mysqldb==1.1.0        # MySQL 연동을 위해 flask_mysqldb 필요 :contentReference[oaicite:0]{index=0}:contentReference[oaicite:1]{index=1}
+mysqlclient==2.1.1          # MySQLdb 드라이버
 pandas==2.2.2
 numpy==1.24.3
-jinja2==3.1.4
-werkzeug==3.0.3
+geopy==2.4.1
 requests==2.32.2
 matplotlib==3.9.0
 folium==0.18.0
 scikit-learn==1.5.2
-geopy==2.4.1
-werkzeug==3.0.3
+Jinja2==3.1.4
+Werkzeug==3.0.3
