@@ -15,7 +15,6 @@ from datetime import datetime, timedelta
 #경로 가져오기
 from place_recommender import PlaceRecommender
 from route_finder import get_route, get_waypoints
-import pandas as pd
 from geopy.geocoders import Nominatim
 from geopy.distance import geodesic
 from schedule_maker import tsp_shortest_path, astar_shortest_path
