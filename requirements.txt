@@ -1,7 +1,6 @@
 Flask==3.0.3
 Flask-Cors==5.0.0
-mysqlclient==2.1.1          # MySQLdb 드라이버
-pandas==2.2.2
+pandas==2.2
 numpy==1.24.3
 geopy==2.4.1
 requests==2.32.2
