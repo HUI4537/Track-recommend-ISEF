@@ -4,6 +4,7 @@ import os
 import sqlite3
 import base64
 import uuid
+import pandas as pd
 from flask import Flask, jsonify, request, render_template
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
