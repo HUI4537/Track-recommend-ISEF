@@ -20,6 +20,39 @@ h2 {
     margin-bottom: 20px;
 }
 
+.question {
+width: 100%;                   /* 가로를 컨테이너 꽉 채움 */
+padding: 0 1rem;               /* 좌우 여백 */
+box-sizing: border-box;        /* 패딩을 너비 계산에 포함 */
+}
+
+/* — 질문 텍스트(Q.)를 가운데 정렬하고 반응형 폰트 크기 적용 — */
+.question-box {
+width: 100%;                   /* 가로를 컨테이너 꽉 채움 */
+padding: 0 1rem;               /* 좌우 여백 */
+box-sizing: border-box;        /* 패딩을 너비 계산에 포함 */
+}
+
+.question-box > p:first-of-type {
+text-align: center;            /* 텍스트 가운데 정렬 */
+margin: 0.5em auto 1em;        /* 위아래 간격 */
+font-size: clamp(1.5rem, 4vw, 2rem);
+/* 
+    clamp(MIN, VAL, MAX)
+    - 화면이 작을 때 최소 1.5rem,
+    - 뷰포트 너비의 4% 쓰다가,
+    - 화면이 크면 최대 2rem 으로 고정 
+*/
+line-height: 1.3;              /* 줄 간격 약간 좁힘 */
+}
+
+/* (선택) 작은 화면에서 본문 폰트 크기를 조금 줄이고 싶다면: */
+@media screen and (max-width: 400px) {
+.question-box > p:first-of-type {
+    font-size: 1.4rem;
+}
+}
+
 .question-box, .start_box {
     height: 100vh;
     display: flex;

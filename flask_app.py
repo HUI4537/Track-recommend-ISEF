@@ -715,7 +715,8 @@ def save_order():
         return jsonify({'error': str(e)}), 500
     
 
-# Journey    @app.route('/Journey')
+# Journey    
+@app.route('/Journey')
 def Journey():
     if 'loggedin' not in session:
         return redirect(url_for('login'))
