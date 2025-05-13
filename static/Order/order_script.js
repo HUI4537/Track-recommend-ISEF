@@ -68,15 +68,15 @@ document.getElementById('save-button').addEventListener('click', function () {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            alert('트랙이 성공적으로 저장되었습니다.');
+            alert('Track saved successfully');
             window.location.href = '/Main';
         } else {
-            alert(data.error || '트랙 저장에 실패했습니다.');
+            alert(data.error || 'Failed to save track');
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('트랙 저장 중 오류가 발생했습니다.');
+        alert('Error saving track.');
     });
 });
 

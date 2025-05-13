@@ -53,7 +53,16 @@ line-height: 1.3;              /* 줄 간격 약간 좁힘 */
 }
 }
 
-.question-box, .start_box {
+.question-box{
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.5s ease;
+}
+
+.start_box{
     height: 60vh;
     display: flex;
     flex-direction: column;
@@ -113,7 +122,7 @@ line-height: 1.3;              /* 줄 간격 약간 좁힘 */
 
 #start_button {
     border: solid #333 10px;
-    border-radius: 8px;
+    border-radius: 10px;
     background-color: #333;
     padding: 5%;
     color: #ffffff;
