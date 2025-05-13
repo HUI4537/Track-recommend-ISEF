@@ -54,7 +54,7 @@ line-height: 1.3;              /* 줄 간격 약간 좁힘 */
 }
 
 .question-box, .start_box {
-    height: 80vh;
+    height: 60vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
