@@ -47,15 +47,15 @@
     </div>
     <nav class="sidebar" id="sidebar">
         <ul class="sidebar-nav">
-            <li class="nav-item"><a href="/../../../" class="nav-link">홈</a></li>
-            <li class="nav-item"><a href="/../../../management" class="nav-link">트랙관리</a></li>
-            <li class="nav-item"><a href="#" class="nav-link">설정</a></li>
+            <li class="nav-item"><a href="/../../../" class="nav-link">Home</a></li>
+            <li class="nav-item"><a href="/../../../management" class="nav-link">Manage Track</a></li>
+            <li class="nav-item"><a href="#" class="nav-link">Settings</a></li>
         </ul>
     </nav>
     <div id="map"></div>
 
     <button id="ttsToggleButton" class="tts-toggle-button">
-        TTS 비활성화
+        TTS OFF
     </button>
     <button id="directionButton" class="direction-button">🧭</button>
 
@@ -65,14 +65,14 @@
     <div id="ttsModal" class="tts-modal">
         <div class="tts-modal-content">
             <span id="ttsModalClose" class="tts-modal-close">&times;</span>
-            <h3>언어 선택</h3>
-            <p>TTS 활성화 후 🧭 버튼을 눌러 여행을 시작하세요</p>
+            <h3>language</h3>
+            <p>After TTS On, press 🧭 button to start your journey!</p>
             <label><input type="radio" name="ttsLang" value="KOR" checked> KOR</label>
             <label><input type="radio" name="ttsLang" value="EN"> EN</label>
             <label><input type="radio" name="ttsLang" value="JA"> JA</label>
             <label><input type="radio" name="ttsLang" value="Deactive"> ❌Deactive</label>
             <button id="ttsActivateButton" class="tts-activate-button">
-                활성화
+                Active
             </button>
         </div>
     </div>

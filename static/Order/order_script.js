@@ -124,7 +124,7 @@ document.addEventListener('DOMContentLoaded', function() {
 document.getElementById('ai-recommend-button').addEventListener('click', async function() {
     const button = this;
     const originalText = button.textContent;
-    button.textContent = '실행중...';
+    button.textContent = 'Running...';
     button.disabled = true;
 
     const placeBoxes = document.querySelectorAll('.place-box');

@@ -467,7 +467,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (lang === "Deactive") {
             ttsEnabled = false;
             selectedLang = null;
-            ttsToggleButton.textContent = `TTS 비활성화`;
+            ttsToggleButton.textContent = `TTS OFF`;
             ttsToggleButton.style.backgroundColor = '#666';  // 중립 색상
 
             // 이미 읽은 장소 목록 초기화
@@ -475,7 +475,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             ttsEnabled = true;
             selectedLang = lang;
-            ttsToggleButton.textContent = `TTS 활성화 (${lang})`;
+            ttsToggleButton.textContent = `TTS ON (${lang})`;
             ttsToggleButton.style.backgroundColor = '#34A853';  // 활성 색상
 
             ttsSpokenPlaces.clear();  // 활성화 시 읽은 장소 목록 초기화
